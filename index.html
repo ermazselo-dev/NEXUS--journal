@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS v6 · ICT Intelligence</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00f0a0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NEXUS">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Fond */
+  --bg:#05080c;--bg2:#090e14;--bg3:#0d1520;--bg4:#121d28;--bg5:#172230;
+  /* Anthracite navigation */
+  --nav:#161b22;--nav2:#1c2330;--nav3:#232c3a;--nav-border:#2a3545;
+  /* Bordures */
+  --bd:#162030;--bd2:#1e2e40;--bd3:#283c52;
+  /* Texte */
+  --tx:#c5d8ed;--mu:#3d5878;--dim:#0f1e2e;
+  /* Couleurs */
+  --G:#00f0a0;--R:#ff2244;--A:#ffb700;--B:#00aaff;--C:#00ccff;--P:#c77dff;--O:#ff8c00;--T:#00e5ff;
+  /* Transparents */
+  --Gd:rgba(0,240,160,.07);--Rd:rgba(255,34,68,.07);--Ad:rgba(255,183,0,.07);
+  --Bd:rgba(0,170,255,.07);--Pd:rgba(199,125,255,.07);
+  /* Typo */
+  --FH:'Rajdhani',sans-serif;--FM:'JetBrains Mono',monospace;--FB:'Outfit',sans-serif;
+  --glow-g:0 0 20px rgba(0,240,160,.18);--glow-b:0 0 20px rgba(0,170,255,.15);
+}
+html,body{height:100%;background:var(--bg);color:var(--tx);font-family:var(--FB);font-size:12px;overflow:hidden}
+
+/* ── LAYOUT ── */
+.app{display:grid;grid-template-columns:268px 1fr 295px;height:100vh}
+
+/* ── SIDEBAR GAUCHE ── */
+.SL{background:var(--bg2);border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden}
+.brand{padding:13px 15px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px;background:var(--nav)}
+.bname{font-family:var(--FH);font-size:20px;letter-spacing:3px;color:var(--G);font-weight:700}
+.badges{display:flex;gap:4px;margin-left:auto}
+.badge{padding:2px 5px;border-radius:2px;font-family:var(--FM);font-size:6px;letter-spacing:.5px}
+.badge-v{background:var(--Pd);border:1px solid rgba(199,125,255,.3);color:var(--P)}
+.badge-p{background:rgba(0,240,160,.08);border:1px solid rgba(0,240,160,.25);color:var(--G)}
+/* Onglets sidebar — anthracite */
+.stabs{display:flex;border-bottom:1px solid var(--nav-border);background:var(--nav)}
+.stab{flex:1;padding:8px 3px;font-family:var(--FM);font-size:7px;letter-spacing:.5px;color:#5a7090;background:var(--nav);border:none;border-bottom:2px solid transparent;cursor:pointer;transition:.15s}
+.stab:hover:not(.on){background:var(--nav2);color:var(--C);border-bottom-color:rgba(0,204,255,.3)}
+.stab.on{color:var(--G);border-bottom-color:var(--G);background:var(--nav2)}
+.spanel{display:none;flex:1;overflow-y:auto;flex-direction:column}
+.spanel.on{display:flex;flex-direction:column}
+
+/* Formulaire */
+.fs{padding:9px 12px;border-bottom:1px solid var(--bd)}
+.fsl{font-family:var(--FM);font-size:7px;letter-spacing:1.5px;color:var(--mu);margin-bottom:6px;text-transform:uppercase}
+.fr{display:flex;gap:4px;margin-bottom:4px}
+.fc{flex:1;display:flex;flex-direction:column;gap:2px}
+.fc label{font-family:var(--FM);font-size:7px;color:var(--mu)}
+input,select,textarea{background:var(--bg3);border:1px solid var(--bd2);color:var(--tx);font-family:var(--FM);font-size:10px;padding:6px 8px;border-radius:2px;width:100%;outline:none;transition:.15s}
+input:focus,select:focus,textarea:focus{border-color:var(--G);background:var(--bg4)}
+select option{background:var(--bg3)}
+textarea{resize:none;line-height:1.5;font-size:9px}
+.bg{display:flex;gap:3px;flex-wrap:wrap}
+.tg{padding:4px 8px;font-family:var(--FM);font-size:7px;border:1px solid var(--bd2);background:var(--bg3);color:#7a9ab8;border-radius:2px;cursor:pointer;transition:.15s;white-space:nowrap}
+.tg:hover{color:var(--G);border-color:var(--G);background:var(--Gd);box-shadow:0 0 8px rgba(0,240,160,.15)}
+.tg.on{background:rgba(0,240,160,.12);color:var(--G);border-color:var(--G);box-shadow:0 0 6px rgba(0,240,160,.15)}
+.gbrow{display:flex;gap:4px}
+.gbt{flex:1;padding:7px 3px;font-family:var(--FM);font-size:8px;border:1px solid var(--bd2);background:var(--bg3);color:#7a9ab8;border-radius:2px;cursor:pointer;transition:.15s;text-align:center;font-weight:600}
+.gbt:hover:not(.on){background:var(--bg4);color:var(--tx);border-color:var(--bd3)}
+.gbt[data-g="A"].on{background:rgba(0,240,160,.1);color:var(--G);border-color:var(--G);box-shadow:0 0 8px rgba(0,240,160,.15)}
+.gbt[data-g="B"].on{background:rgba(0,170,255,.1);color:var(--B);border-color:var(--B)}
+.gbt[data-g="C"].on{background:rgba(255,183,0,.1);color:var(--A);border-color:var(--A)}
+.sub{width:100%;padding:10px;font-family:var(--FH);font-size:13px;letter-spacing:2px;background:var(--G);color:#000;border:none;border-radius:2px;cursor:pointer;margin-top:4px;transition:.15s;font-weight:700;box-shadow:0 0 12px rgba(0,240,160,.2)}
+.sub:hover{opacity:.9;box-shadow:0 0 20px rgba(0,240,160,.35);transform:translateY(-1px)}
+.sub:active{transform:scale(.98)}
+
+/* ── PSYCHOLOGIE SLIDERS ── */
+.psych-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px}
+.psych-item{display:flex;flex-direction:column;gap:3px}
+.psych-label{font-family:var(--FM);font-size:7px;color:var(--mu);display:flex;justify-content:space-between}
+.psych-val{color:var(--tx);font-weight:500}
+input[type=range]{-webkit-appearance:none;height:4px;border-radius:2px;background:var(--bg4);border:none;padding:0;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--G);cursor:pointer;box-shadow:var(--glow-g)}
+.psych-bool{display:flex;gap:4px}
+.pbtn{flex:1;padding:5px;font-family:var(--FM);font-size:7px;border:1px solid var(--bd2);background:var(--bg3);color:#7a9ab8;border-radius:2px;cursor:pointer;text-align:center;transition:.15s}
+.pbtn:hover:not(.on){background:var(--bg4);color:var(--tx);border-color:var(--bd3)}
+.pbtn.yes.on{background:rgba(0,240,160,.1);color:var(--G);border-color:var(--G);box-shadow:0 0 5px rgba(0,240,160,.12)}
+.pbtn.no.on{background:rgba(255,34,68,.1);color:var(--R);border-color:var(--R)}
+/* Score psycho visuel */
+.psych-score-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:4px;overflow:hidden}
+.psych-score-fill{height:100%;border-radius:2px;transition:.5s}
+
+/* Vision zone */
+.vision-zone{margin:8px 12px;border:1px dashed var(--bd3);border-radius:4px;padding:10px;text-align:center;cursor:pointer;transition:.2s;background:var(--bg3)}
+.vision-zone:hover,.vision-zone.drag{border-color:var(--P);background:var(--Pd)}
+.vision-preview{width:100%;border-radius:3px;margin-top:5px;display:none;max-height:80px;object-fit:cover}
+.vision-preview.show{display:block}
+.viz-analyze-btn{width:100%;padding:6px;background:var(--Pd);border:1px solid rgba(199,125,255,.3);color:var(--P);font-family:var(--FM);font-size:7px;border-radius:2px;cursor:pointer;margin-top:5px;letter-spacing:.5px;transition:.15s}
+.vision-result{background:var(--bg4);border:1px solid var(--bd2);border-radius:3px;padding:7px;margin-top:5px;font-family:var(--FB);font-size:8px;color:var(--tx);line-height:1.7;display:none}
+.vision-result.show{display:block}
+.vgrade{display:inline-block;padding:2px 7px;border-radius:2px;font-family:var(--FM);font-size:9px;font-weight:600;margin-bottom:3px}
+.vg-a{background:rgba(0,240,160,.12);color:var(--G);border:1px solid rgba(0,240,160,.3)}
+.vg-b{background:rgba(0,170,255,.12);color:var(--B);border:1px solid rgba(0,170,255,.3)}
+.vg-c{background:rgba(255,183,0,.12);color:var(--A);border:1px solid rgba(255,183,0,.3)}
+
+/* ── MAIN CENTER ── */
+.MC{display:flex;flex-direction:column;overflow:hidden}
+/* Onglets main — anthracite */
+.mnav{display:flex;border-bottom:1px solid var(--nav-border);background:var(--nav)}
+.mtab{padding:9px 13px;font-family:var(--FM);font-size:7px;letter-spacing:1px;color:#5a7090;background:var(--nav);border:none;border-bottom:2px solid transparent;cursor:pointer;transition:.15s}
+.mtab:hover:not(.on){background:var(--nav2);color:var(--C);border-bottom-color:rgba(0,204,255,.3)}
+.mtab.on{color:var(--C);border-bottom-color:var(--C);background:var(--nav2)}
+.mbody{flex:1;overflow-y:auto;padding:12px}
+.krow{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
+.kpi{background:var(--bg2);border:1px solid var(--bd);border-radius:4px;padding:9px 10px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kc,var(--bd))}
+.kl{font-family:var(--FM);font-size:7px;letter-spacing:1px;color:var(--mu);margin-bottom:3px}
+.kv{font-family:var(--FH);font-size:19px;color:var(--kc,var(--tx));letter-spacing:1px;line-height:1;font-weight:700}
+.ks{font-family:var(--FM);font-size:7px;color:var(--mu);margin-top:2px}
+.p2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px}
+.p3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:7px}
+.pan{background:var(--bg2);border:1px solid var(--bd);border-radius:4px;padding:11px}
+.pf{grid-column:1/-1}
+.pt{font-family:var(--FM);font-size:7px;letter-spacing:1.5px;color:var(--mu);margin-bottom:9px;text-transform:uppercase}
+.br{display:flex;align-items:center;gap:5px;margin-bottom:4px}
+.bl{font-family:var(--FM);font-size:8px;color:var(--tx);min-width:68px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btr{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.bfill{height:100%;border-radius:2px;transition:.6s}
+.bp{font-family:var(--FM);font-size:8px;min-width:28px;text-align:right}
+.bn{font-family:var(--FM);font-size:7px;color:var(--mu);min-width:16px;text-align:right}
+.cw{position:relative;height:150px;width:100%}
+.nd{text-align:center;padding:20px;color:var(--mu);font-family:var(--FM);font-size:9px;line-height:2}
+.ins{background:var(--bg4);border:1px solid var(--bd2);border-radius:3px;padding:7px 9px;margin-bottom:4px;border-left:2px solid var(--ic)}
+.it{font-family:var(--FM);font-size:8px;color:var(--tx);margin-bottom:2px}
+.ib{font-family:var(--FB);font-size:8px;color:var(--mu);line-height:1.6}
+.flr{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap;align-items:center}
+.flt{background:var(--nav);border:1px solid var(--nav-border);color:var(--tx);font-family:var(--FM);font-size:8px;padding:4px 7px;border-radius:2px;cursor:pointer;outline:none}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{font-family:var(--FM);font-size:7px;letter-spacing:1px;color:var(--mu);padding:5px 7px;border-bottom:1px solid var(--bd);text-align:left;white-space:nowrap;text-transform:uppercase}
+td{padding:4px 7px;border-bottom:1px solid rgba(22,32,48,.5);font-family:var(--FM);font-size:8px;white-space:nowrap}
+tr:hover td{background:var(--bg3)}
+.bdg{display:inline-block;padding:1px 4px;border-radius:2px;font-size:7px;font-family:var(--FM)}
+.bw{background:rgba(0,240,160,.1);color:var(--G);border:1px solid rgba(0,240,160,.2)}
+.bl2{background:rgba(255,34,68,.1);color:var(--R);border:1px solid rgba(255,34,68,.2)}
+.ba{background:rgba(0,240,160,.1);color:var(--G)}
+.bb2{background:rgba(0,170,255,.1);color:var(--B)}
+.bc{background:rgba(255,183,0,.1);color:var(--A)}
+.ctg{display:inline-block;padding:1px 3px;border-radius:1px;font-size:7px;font-family:var(--FM)}
+.cc{background:rgba(199,125,255,.1);border:1px solid rgba(199,125,255,.2);color:var(--P)}
+.cs{background:rgba(255,183,0,.08);border:1px solid rgba(255,183,0,.2);color:var(--A)}
+.co{background:rgba(0,170,255,.08);border:1px solid rgba(0,170,255,.2);color:var(--B)}
+.ct{background:rgba(0,204,255,.08);border:1px solid rgba(0,204,255,.2);color:var(--T)}
+.pos{color:var(--G)}.neg{color:var(--R)}
+.db{padding:2px 5px;background:rgba(255,34,68,.08);border:1px solid rgba(255,34,68,.15);color:var(--R);border-radius:2px;font-family:var(--FM);font-size:7px;cursor:pointer;transition:.1s}
+.db:hover{background:rgba(255,34,68,.2);box-shadow:0 0 5px rgba(255,34,68,.2)}
+
+/* Psycho chart */
+.psych-radar-wrap{position:relative;height:180px;width:100%}
+.emotion-card{background:var(--bg3);border:1px solid var(--bd2);border-radius:4px;padding:8px;margin-bottom:5px;border-left:3px solid var(--ec)}
+.emotion-title{font-family:var(--FM);font-size:8px;color:var(--tx);margin-bottom:3px;display:flex;justify-content:space-between}
+.emotion-body{font-family:var(--FB);font-size:8px;color:var(--mu);line-height:1.6}
+.emotion-score{font-family:var(--FH);font-size:14px;font-weight:700}
+
+/* ── SIDEBAR DROITE ── */
+.SR{background:var(--bg2);border-left:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden}
+.aih{padding:11px 13px;border-bottom:1px solid var(--bd);background:var(--nav)}
+.aitr{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.aid{width:7px;height:7px;border-radius:50%;background:var(--G);animation:pulse 2s infinite;box-shadow:var(--glow-g)}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:var(--glow-g)}50%{opacity:.2;box-shadow:none}}
+.ain{font-family:var(--FH);font-size:17px;letter-spacing:3px;color:var(--G);font-weight:700}
+.ais{font-family:var(--FM);font-size:7px;color:var(--mu)}
+.clk{font-family:var(--FH);font-size:18px;letter-spacing:2px;color:var(--C);margin-top:5px;font-weight:600}
+.smini{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap}
+.sm{padding:2px 5px;border-radius:2px;font-family:var(--FM);font-size:7px;border:1px solid var(--bd2);color:var(--mu)}
+.sm.on{border-color:var(--G);color:var(--G);background:var(--Gd)}
+.sm.soon{border-color:var(--A);color:var(--A);background:var(--Ad)}
+/* Signal */
+.rsec{padding:9px 12px;border-bottom:1px solid var(--bd)}
+.sc{background:var(--bg3);border:1px solid var(--bd2);border-radius:4px;padding:9px;display:flex;gap:8px;align-items:center;border-left:3px solid var(--sv,var(--bd))}
+.srng{width:42px;height:42px;border-radius:50%;border:2px solid var(--sv,var(--bd));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sn{font-family:var(--FH);font-size:20px;color:var(--sv,var(--tx));font-weight:700}
+.si{flex:1}
+.sl2{font-family:var(--FM);font-size:7px;color:var(--mu);letter-spacing:1px}
+.st{font-family:var(--FM);font-size:9px;color:var(--tx);margin:2px 0}
+.sa{font-family:var(--FB);font-size:8px;color:var(--mu);line-height:1.5}
+/* Combos */
+.csec{padding:7px 12px;overflow-y:auto;flex:1;min-height:0}
+.combo{background:var(--bg3);border:1px solid var(--bd2);border-radius:3px;padding:7px 9px;margin-bottom:4px;cursor:pointer;transition:.12s;border-left:2px solid var(--cc,var(--bd))}
+.combo:hover{background:var(--bg4);border-color:var(--border3,var(--bd3));box-shadow:0 0 8px rgba(0,0,0,.3)}
+.ch{display:flex;align-items:center;gap:5px;margin-bottom:3px}
+.crk{font-family:var(--FM);font-size:7px;color:var(--cc,var(--mu))}
+.cnm{font-family:var(--FM);font-size:8px;flex:1;color:var(--tx)}
+.cwr{font-family:var(--FH);font-size:15px;color:var(--cc,var(--tx));font-weight:700}
+.ctgs2{display:flex;gap:2px;flex-wrap:wrap;margin-bottom:3px}
+.cst{display:flex;gap:8px;font-family:var(--FM);font-size:7px;color:var(--mu)}
+.cprog{height:2px;background:var(--bg5);border-radius:1px;margin-top:4px;overflow:hidden}
+.cpf{height:100%;border-radius:1px;transition:.5s}
+.cdet{display:none;margin-top:7px;padding-top:7px;border-top:1px solid var(--bd);font-family:var(--FB);font-size:8px;color:var(--mu);line-height:1.7}
+.cdet.on{display:block}
+/* Chat */
+.chat{display:flex;flex-direction:column;border-top:1px solid var(--bd);flex-shrink:0}
+.chd{padding:6px 12px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:5px;font-family:var(--FM);font-size:7px;letter-spacing:1px;color:var(--G);background:var(--nav)}
+.cms{overflow-y:auto;padding:7px;display:flex;flex-direction:column;gap:4px;max-height:155px}
+.msg{padding:5px 8px;border-radius:3px;font-family:var(--FB);font-size:9px;line-height:1.6}
+.msg.ai{background:var(--bg3);border:1px solid var(--bd);color:var(--tx)}
+.msg.user{background:var(--Gd);border:1px solid rgba(0,240,160,.15);color:var(--tx);align-self:flex-end;max-width:92%}
+.msg.sys{background:var(--Bd);border:1px solid rgba(0,170,255,.15);color:var(--B);font-family:var(--FM);font-size:7px}
+.msg.psych{background:var(--Pd);border:1px solid rgba(199,125,255,.2);color:var(--tx);font-family:var(--FM);font-size:8px}
+.msg.vision{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.15);color:var(--T);font-family:var(--FM);font-size:8px}
+.cinp{display:flex;gap:4px;padding:6px;border-top:1px solid var(--bd)}
+.cinp input{flex:1;font-size:9px}
+.csnd{padding:5px 9px;background:var(--G);color:#000;border:none;border-radius:2px;font-family:var(--FM);font-size:8px;cursor:pointer;font-weight:700}
+/* Quick questions */
+.qqs{padding:6px 12px;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;gap:3px}
+.qq{padding:5px 8px;background:var(--nav);border:1px solid var(--nav-border);color:#6a8aaa;border-radius:2px;font-family:var(--FM);font-size:7px;cursor:pointer;text-align:left;transition:.15s}
+.qq:hover{border-color:var(--G);color:var(--G);background:var(--Gd);box-shadow:0 0 6px rgba(0,240,160,.1)}
+
+/* Overlay */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;z-index:999;backdrop-filter:blur(10px)}
+.kbox{background:var(--bg2);border:1px solid var(--bd3);border-radius:6px;padding:26px;max-width:400px;width:90%;border-top:2px solid var(--G)}
+.kt{font-family:var(--FH);font-size:22px;letter-spacing:3px;color:var(--G);margin-bottom:4px;font-weight:700}
+.ks2{font-family:var(--FB);font-size:11px;color:var(--mu);line-height:1.8;margin-bottom:14px}
+.ki{width:100%;margin-bottom:8px;font-size:10px;padding:7px 9px;letter-spacing:1px}
+.kb{width:100%;padding:9px;font-family:var(--FH);font-size:13px;letter-spacing:3px;background:var(--G);color:#000;border:none;border-radius:2px;cursor:pointer;font-weight:700}
+.ksec{margin-top:8px;padding-top:8px;border-top:1px solid var(--bd)}
+.ksec label{display:flex;align-items:center;gap:6px;font-family:var(--FM);font-size:8px;color:var(--mu);margin-bottom:5px;cursor:pointer}
+.rbtn{padding:5px 9px;background:var(--nav);border:1px solid var(--nav-border);color:var(--C);font-family:var(--FM);font-size:7px;border-radius:2px;cursor:pointer;transition:.15s}
+.rbtn:hover{border-color:var(--C);background:var(--Bd);box-shadow:0 0 6px rgba(0,204,255,.15)}
+
+/* News filter badge */
+.news-warning{background:rgba(255,34,68,.08);border:1px solid rgba(255,34,68,.2);border-radius:3px;padding:5px 8px;font-family:var(--FM);font-size:8px;color:var(--R);margin-bottom:5px;display:none}
+.news-warning.show{display:block}
+
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--bd3);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--mu)}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay">
+  <div class="kbox">
+    <div class="kt">⬡ NEXUS v6</div>
+    <div class="ks2">Journal ICT/SMC · Vision AI · Psychology Tracker · DXY · News Filter.<br>Entre ta clé API Anthropic pour tout activer.</div>
+    <input class="ki" type="password" id="key-inp" placeholder="sk-ant-api03-..." autocomplete="off">
+    <button class="kb" onclick="saveKey()">ACTIVER NEXUS v6 →</button>
+    <div class="ksec">
+      <label><input type="checkbox" id="tg-on"> Notifications Telegram</label>
+      <div id="tg-fields" style="display:none;margin-top:6px">
+        <input type="text" id="tg-token" placeholder="Bot Token" style="margin-bottom:5px;font-size:9px">
+        <input type="text" id="tg-chat" placeholder="Chat ID" style="font-size:9px">
+      </div>
+    </div>
+    <button style="margin-top:10px;width:100%;padding:7px;background:none;border:1px solid var(--bd);color:var(--mu);font-family:var(--FM);font-size:8px;border-radius:2px;cursor:pointer" onclick="skipKey()">CONTINUER SANS IA</button>
+  </div>
+</div>
+
+<div class="app">
+<!-- ══ SIDEBAR GAUCHE ══ -->
+<div class="SL">
+  <div class="brand">
+    <div class="bname">NEXUS</div>
+    <div class="badges">
+      <span class="badge badge-v">VISION</span>
+      <span class="badge badge-p">PSYCH</span>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:5px">
+      <button id="install-btn" onclick="installPWA()" style="display:none;align-items:center;gap:3px;padding:3px 7px;background:rgba(0,240,160,.1);border:1px solid rgba(0,240,160,.3);color:var(--G);border-radius:2px;font-family:var(--FM);font-size:7px;cursor:pointer;transition:.15s" title="Installer NEXUS comme application">
+        ⊕ Installer
+      </button>
+      <button onclick="installPWA()" style="padding:3px 7px;background:rgba(0,240,160,.08);border:1px solid rgba(0,240,160,.2);color:var(--G);border-radius:2px;font-family:var(--FM);font-size:7px;cursor:pointer" title="Installer sur cet appareil">📱</button>
+      <span style="font-family:var(--FM);font-size:7px;color:var(--mu)">v6</span>
+    </div>
+  </div>
+  <div class="stabs">
+    <button class="stab on" onclick="sTab(this,'new')">TRADE</button>
+    <button class="stab" onclick="sTab(this,'psych')">PSYCHO</button>
+    <button class="stab" onclick="sTab(this,'mem')">MÉMOIRE</button>
+    <button class="stab" onclick="sTab(this,'cfg')">CONFIG</button>
+  </div>
+
+  <!-- ── ONGLET TRADE ── -->
+  <div class="spanel on" id="sp-new">
+    <!-- Vision -->
+    <div class="fs">
+      <div class="fsl">📸 Vision IA — Analyse graphique</div>
+      <div class="vision-zone" id="vzone" onclick="document.getElementById('vfile').click()" ondragover="e=>{e.preventDefault();vzone.classList.add('drag')}" ondragleave="document.getElementById('vzone').classList.remove('drag')" ondrop="handleDrop(event)">
+        <div style="font-size:16px;margin-bottom:3px">📸</div>
+        <div style="font-family:var(--FM);font-size:8px;color:var(--mu)">Glisse capture · <span style="color:var(--P)">NEXUS analyse</span></div>
+        <img class="vision-preview" id="vprev" alt="">
+      </div>
+      <input type="file" id="vfile" accept="image/*" style="display:none" onchange="handleVFile(event)">
+      <div class="fr" style="margin-top:5px">
+        <select id="vtf" style="flex:1;font-size:8px"><option>M1</option><option>M3</option><option>M5</option><option>M15</option><option>H1</option><option>H4</option></select>
+        <select id="vmoment" style="flex:1;font-size:8px"><option value="pre">Pré-trade</option><option value="post">Post-trade</option></select>
+      </div>
+      <button class="viz-analyze-btn" onclick="analyzeVision()">⬡ ANALYSER AVEC NEXUS</button>
+      <div class="vision-result" id="vresult"></div>
+    </div>
+    <!-- Date -->
+    <div class="fs">
+      <div class="fsl">Date & Instrument</div>
+      <div class="fr">
+        <div class="fc"><label>Date</label><input type="date" id="f-date"></div>
+        <div class="fc"><label>Heure</label><input type="time" id="f-time"></div>
+      </div>
+      <div class="fr">
+        <div class="fc"><label>Instrument</label>
+          <select id="f-inst"><option>EUR/USD</option><option>NQ</option><option>US100</option><option>ES</option><option>GBP/USD</option><option>XAU/USD</option><option>Autre</option></select></div>
+        <div class="fc"><label>TF Entrée</label>
+          <select id="f-tf"><option>M1</option><option>M3</option><option>M5</option><option>M15</option><option>H1</option></select></div>
+      </div>
+    </div>
+    <!-- Structure HTF -->
+    <div class="fs">
+      <div class="fsl">Structure HTF</div>
+      <div class="fr" style="margin-bottom:5px">
+        <div class="fc"><label>Bias H4</label><select id="f-h4"><option>Bullish</option><option>Bearish</option><option>Neutre</option></select></div>
+        <div class="fc"><label>Bias H1</label><select id="f-h1"><option>Bullish</option><option>Bearish</option><option>Neutre</option></select></div>
+      </div>
+      <div class="bg" id="bos-btns">
+        <button class="tg" data-b="BOS Bull">BOS Bull</button>
+        <button class="tg" data-b="BOS Bear">BOS Bear</button>
+        <button class="tg" data-b="CHoCH Bull">CHoCH ↑</button>
+        <button class="tg" data-b="CHoCH Bear">CHoCH ↓</button>
+        <button class="tg" data-b="MSS Bull">MSS ↑</button>
+        <button class="tg" data-b="MSS Bear">MSS ↓</button>
+        <button class="tg" data-b="CISD">CISD</button>
+      </div>
+    </div>
+    <!-- Sweep -->
+    <div class="fs">
+      <div class="fsl">Sweep de Liquidité</div>
+      <div class="bg" id="sweep-btns">
+        <button class="tg" data-s="Asia H">Asia H</button><button class="tg" data-s="Asia L">Asia L</button>
+        <button class="tg" data-s="EQH">EQH</button><button class="tg" data-s="EQL">EQL</button>
+        <button class="tg" data-s="PDH">PDH</button><button class="tg" data-s="PDL">PDL</button>
+        <button class="tg" data-s="PWH">PWH</button><button class="tg" data-s="PWL">PWL</button>
+        <button class="tg" data-s="IBH">IBH</button><button class="tg" data-s="IBL">IBL</button>
+        <button class="tg" data-s="Open">Open</button><button class="tg" data-s="SSL">SSL</button>
+        <button class="tg" data-s="BSL">BSL</button>
+      </div>
+    </div>
+    <!-- Setup -->
+    <div class="fs">
+      <div class="fsl">Setup Principal</div>
+      <select id="f-setup" style="margin-bottom:5px">
+        <option value="">-- Choisir --</option>
+        <option>BPR</option><option>IFVG</option><option>FVG MTF</option>
+        <option>Order Block</option><option>Breaker Block</option>
+        <option>OTE</option><option>CISD</option><option>MSS</option>
+        <option>Displacement + FVG</option><option>London ARR</option>
+        <option>AMD Setup</option><option>ICT Silver Bullet</option><option>Autre</option>
+      </select>
+      <div class="fsl">Confluences MTF</div>
+      <div class="bg" id="conf-btns">
+        <button class="tg" data-c="H4 FVG">H4 FVG</button><button class="tg" data-c="H1 FVG">H1 FVG</button>
+        <button class="tg" data-c="M15 FVG">M15 FVG</button><button class="tg" data-c="M5 FVG">M5 FVG</button>
+        <button class="tg" data-c="M1 FVG">M1 FVG</button><button class="tg" data-c="HVN/POC">HVN/POC</button>
+        <button class="tg" data-c="VWAP">VWAP</button><button class="tg" data-c="OB H4">OB H4</button>
+        <button class="tg" data-c="OB H1">OB H1</button><button class="tg" data-c="Breaker">Breaker</button>
+        <button class="tg" data-c="EQH/EQL">EQH/EQL</button><button class="tg" data-c="DXY">DXY corr.</button>
+      </div>
+    </div>
+    <!-- Direction / Session / KZ -->
+    <div class="fs">
+      <div class="fr">
+        <div class="fc"><label>Direction</label><select id="f-dir"><option>LONG</option><option>SHORT</option></select></div>
+        <div class="fc"><label>Session</label><select id="f-sess"><option>London</option><option>NY</option><option>London/NY</option><option>Frankfurt</option><option>Asia</option></select></div>
+      </div>
+      <div class="fsl" style="margin-top:5px">Kill Zone</div>
+      <div class="bg" id="kz-btns">
+        <button class="tg" data-k="Frankfurt KZ">Frankfurt</button>
+        <button class="tg" data-k="London Open KZ">London Open</button>
+        <button class="tg" data-k="NY Open KZ">NY Open</button>
+        <button class="tg" data-k="ICT Silver Bullet">Silver Bullet</button>
+      </div>
+    </div>
+    <!-- Extra conditions -->
+    <div class="fs">
+      <div class="fsl">Conditions Extra</div>
+      <div class="bg" id="extra-btns">
+        <button class="tg" data-e="Displacement fort">Displacement</button>
+        <button class="tg" data-e="DXY inverse">DXY inv.</button>
+        <button class="tg" data-e="News catalyst">News</button>
+        <button class="tg" data-e="Judas Swing">Judas Swing</button>
+        <button class="tg" data-e="AMD Setup">AMD</button>
+        <button class="tg" data-e="OTE 62%">OTE 62%</button>
+        <button class="tg" data-e="Premium/Discount">Prem/Disc</button>
+        <button class="tg" data-e="Volume spike">Vol. spike</button>
+        <button class="tg" data-e="London close sweep">LC Sweep</button>
+        <button class="tg" data-e="Consolidation break">Consol.</button>
+      </div>
+    </div>
+    <!-- Grade / Résultat -->
+    <div class="fs">
+      <div class="fsl">Grade & Résultat</div>
+      <div class="gbrow" style="margin-bottom:5px">
+        <button class="gbt on" data-g="A">A · Parfait</button>
+        <button class="gbt" data-g="B">B · OK</button>
+        <button class="gbt" data-g="C">C · Faible</button>
+      </div>
+      <div class="fr">
+        <div class="fc"><label>R réalisé</label><input type="text" id="f-r" placeholder="+2 / -1"></div>
+        <div class="fc"><label>P&L ($)</label><input type="number" id="f-pnl" placeholder="0"></div>
+      </div>
+    </div>
+    <!-- Erreur -->
+    <div class="fs">
+      <div class="fsl">Erreur commise</div>
+      <select id="f-err">
+        <option>Aucune – Exécution parfaite</option>
+        <option>Anticipation (entrée trop tôt)</option>
+        <option>FOMO (entrée trop tard)</option>
+        <option>Stop trop serré</option>
+        <option>Mauvaise gestion du trade</option>
+        <option>Setup invalide</option>
+        <option>Revenge trade</option>
+        <option>Hors Kill Zone</option>
+        <option>Contre-tendance HTF</option>
+        <option>Pas attendu confirmation M1</option>
+        <option>Surtrading</option>
+        <option>Autre</option>
+      </select>
+    </div>
+    <!-- Notes -->
+    <div class="fs">
+      <div class="fsl">Contexte & Notes</div>
+      <textarea id="f-why" rows="2" placeholder="Structure, liquidité, displacement..."></textarea>
+      <textarea id="f-notes" rows="2" style="margin-top:4px" placeholder="Leçons post-trade..."></textarea>
+    </div>
+    <div style="padding:8px 12px 12px">
+      <button class="sub" onclick="addTrade()">+ VALIDER LE TRADE</button>
+    </div>
+  </div>
+
+  <!-- ── ONGLET PSYCHOLOGIE ── -->
+  <div class="spanel" id="sp-psych">
+    <div class="fs">
+      <div class="fsl">🧠 État Mental — Avant le Trade</div>
+      <div id="news-warn" class="news-warning">⚠ NEWS dans &lt;30min — Trading déconseillé</div>
+      <div class="psych-grid">
+        <div class="psych-item">
+          <div class="psych-label">Confiance <span class="psych-val" id="lbl-confiance">3</span></div>
+          <input type="range" id="ps-confiance" min="1" max="5" value="3" oninput="updatePsych()">
+        </div>
+        <div class="psych-item">
+          <div class="psych-label">Stress <span class="psych-val" id="lbl-stress">3</span></div>
+          <input type="range" id="ps-stress" min="1" max="5" value="3" oninput="updatePsych()">
+        </div>
+        <div class="psych-item">
+          <div class="psych-label">Focus <span class="psych-val" id="lbl-focus">3</span></div>
+          <input type="range" id="ps-focus" min="1" max="5" value="3" oninput="updatePsych()">
+        </div>
+        <div class="psych-item">
+          <div class="psych-label">Énergie <span class="psych-val" id="lbl-energie">3</span></div>
+          <input type="range" id="ps-energie" min="1" max="5" value="3" oninput="updatePsych()">
+        </div>
+        <div class="psych-item">
+          <div class="psych-label">Patience <span class="psych-val" id="lbl-patience">3</span></div>
+          <input type="range" id="ps-patience" min="1" max="5" value="3" oninput="updatePsych()">
+        </div>
+        <div class="psych-item">
+          <div class="psych-label">Discipline <span class="psych-val" id="lbl-discipline">3</span></div>
+          <input type="range" id="ps-discipline" min="1" max="5" value="3" oninput="updatePsych()">
+        </div>
+      </div>
+      <div class="psych-score-bar" style="margin-bottom:8px">
+        <div class="psych-score-fill" id="psych-score-fill"></div>
+      </div>
+      <div id="psych-score-label" style="font-family:var(--FM);font-size:8px;color:var(--mu);text-align:center;margin-bottom:8px"></div>
+    </div>
+    <div class="fs">
+      <div class="fsl">Indicateurs Booléens</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div>
+          <div style="font-family:var(--FM);font-size:7px;color:var(--mu);margin-bottom:3px">FOMO présent ?</div>
+          <div class="psych-bool">
+            <button class="pbtn yes" data-bool="fomo" data-val="non" onclick="toggleBool(this,'non')">Non</button>
+            <button class="pbtn no" data-bool="fomo" data-val="oui" onclick="toggleBool(this,'oui')">Oui</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--FM);font-size:7px;color:var(--mu);margin-bottom:3px">J'ai suivi mon plan ?</div>
+          <div class="psych-bool">
+            <button class="pbtn yes on" data-bool="plan" data-val="oui" onclick="toggleBool(this,'oui')">Oui</button>
+            <button class="pbtn no" data-bool="plan" data-val="non" onclick="toggleBool(this,'non')">Non</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--FM);font-size:7px;color:var(--mu);margin-bottom:3px">J'avais des doutes ?</div>
+          <div class="psych-bool">
+            <button class="pbtn yes" data-bool="doutes" data-val="non" onclick="toggleBool(this,'non')">Non</button>
+            <button class="pbtn no" data-bool="doutes" data-val="oui" onclick="toggleBool(this,'oui')">Oui</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--FM);font-size:7px;color:var(--mu);margin-bottom:3px">Revenge trade ?</div>
+          <div class="psych-bool">
+            <button class="pbtn yes" data-bool="revenge" data-val="non" onclick="toggleBool(this,'non')">Non</button>
+            <button class="pbtn no" data-bool="revenge" data-val="oui" onclick="toggleBool(this,'oui')">Oui</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--FM);font-size:7px;color:var(--mu);margin-bottom:3px">Overtrading aujourd'hui ?</div>
+          <div class="psych-bool">
+            <button class="pbtn yes" data-bool="overtrade" data-val="non" onclick="toggleBool(this,'non')">Non</button>
+            <button class="pbtn no" data-bool="overtrade" data-val="oui" onclick="toggleBool(this,'oui')">Oui</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fs">
+      <div class="fsl">État Pendant le Trade</div>
+      <div class="psych-grid">
+        <div class="psych-item">
+          <div class="psych-label">Calme <span class="psych-val" id="lbl-calme">3</span></div>
+          <input type="range" id="ps-calme" min="1" max="5" value="3" oninput="updatePsych()">
+        </div>
+        <div class="psych-item">
+          <div class="psych-label">Hésitation <span class="psych-val" id="lbl-hesitation">3</span></div>
+          <input type="range" id="ps-hesitation" min="1" max="5" value="3" oninput="updatePsych()">
+        </div>
+      </div>
+    </div>
+    <div class="fs">
+      <div class="fsl">État Après le Trade</div>
+      <div class="psych-grid">
+        <div class="psych-item">
+          <div class="psych-label">Satisfaction <span class="psych-val" id="lbl-satisfaction">3</span></div>
+          <input type="range" id="ps-satisfaction" min="1" max="5" value="3" oninput="updatePsych()">
+        </div>
+        <div class="psych-item">
+          <div class="psych-label">Regrets <span class="psych-val" id="lbl-regrets">3</span></div>
+          <input type="range" id="ps-regrets" min="1" max="5" value="3" oninput="updatePsych()">
+        </div>
+      </div>
+    </div>
+    <div class="fs">
+      <div class="fsl">Note Psycho Post-Trade</div>
+      <textarea id="ps-notes" rows="3" placeholder="Comment te sentais-tu ? Qu'est-ce qui a influencé ta décision ?"></textarea>
+    </div>
+    <div style="padding:8px 12px">
+      <button style="width:100%;padding:7px;background:var(--bg3);border:1px solid var(--bd2);color:var(--P);font-family:var(--FM);font-size:8px;border-radius:2px;cursor:pointer" onclick="analyzePsych()">🧠 ANALYSE PSYCHOLOGIQUE IA</button>
+    </div>
+  </div>
+
+  <!-- ── ONGLET MÉMOIRE ── -->
+  <div class="spanel" id="sp-mem">
+    <div class="fs">
+      <div class="fsl">Mémoire Accumulée</div>
+      <div id="mem-summary" style="font-family:var(--FM);font-size:8px;color:var(--mu);line-height:2.2">Aucune donnée.</div>
+    </div>
+    <div class="fs">
+      <div class="fsl">Patterns Détectés</div>
+      <div id="mem-patterns"></div>
+    </div>
+    <div class="fs">
+      <div class="fsl">Profil Psychologique</div>
+      <div id="mem-psych-profile" style="font-family:var(--FB);font-size:8px;color:var(--mu);line-height:1.8"></div>
+    </div>
+    <div class="fs">
+      <div class="fsl">Règles Détectées</div>
+      <div id="mem-rules" style="font-family:var(--FB);font-size:8px;color:var(--mu);line-height:2"></div>
+    </div>
+    <div style="padding:7px 12px;display:flex;flex-direction:column;gap:5px">
+      <button style="width:100%;padding:6px;background:var(--bg3);border:1px solid var(--bd2);color:var(--C);font-family:var(--FM);font-size:8px;border-radius:2px;cursor:pointer" onclick="deepLearn()">↺ ANALYSE PROFONDE</button>
+      <button style="width:100%;padding:6px;background:var(--bg3);border:1px solid var(--bd2);color:var(--P);font-family:var(--FM);font-size:8px;border-radius:2px;cursor:pointer" onclick="analyzePsychPatterns()">🧠 PATTERNS PSYCHO</button>
+      <button style="width:100%;padding:6px;background:var(--bg3);border:1px solid var(--bd2);color:var(--T);font-family:var(--FM);font-size:8px;border-radius:2px;cursor:pointer" onclick="analyzeVisualPatterns()">👁 PATTERNS VISUELS</button>
+    </div>
+  </div>
+
+  <!-- ── ONGLET CONFIG ── -->
+  <div class="spanel" id="sp-cfg">
+    <div class="fs">
+      <div class="fsl">Clé API Anthropic</div>
+      <input type="password" id="cfg-key" placeholder="sk-ant-api03-..." style="margin-bottom:5px">
+      <button style="width:100%;padding:6px;background:var(--G);color:#000;border:none;border-radius:2px;font-family:var(--FM);font-size:8px;cursor:pointer;font-weight:700" onclick="updateKey()">METTRE À JOUR</button>
+    </div>
+    <div class="fs">
+      <div class="fsl">Telegram</div>
+      <div class="fc" style="margin-bottom:5px"><label>Bot Token</label><input type="text" id="cfg-tg-token" placeholder="123456:AAGxxx"></div>
+      <div class="fc" style="margin-bottom:5px"><label>Chat ID</label><input type="text" id="cfg-tg-chat" placeholder="-100xxxxxxxx"></div>
+      <button style="width:100%;padding:6px;background:var(--bg3);border:1px solid var(--bd2);color:var(--C);font-family:var(--FM);font-size:8px;border-radius:2px;cursor:pointer" onclick="saveTg();testTg()">SAUVEGARDER & TESTER</button>
+    </div>
+
+    <div class="fs">
+      <div class="fsl">🔴 Filtre News — Actif</div>
+      <div id="news-status-bar" style="background:rgba(0,240,160,.08);border:1px solid rgba(0,240,160,.2);border-radius:3px;padding:6px 8px;margin-bottom:7px;font-family:var(--FM);font-size:8px;color:var(--G)">
+        ✓ Aucune news rouge dans les 30 prochaines minutes
+      </div>
+      <!-- News du jour saisies manuellement -->
+      <div class="fsl" style="margin-bottom:4px">News rouges aujourd'hui (heure Paris)</div>
+      <div id="news-list" style="display:flex;flex-direction:column;gap:3px;margin-bottom:6px"></div>
+      <div class="fr">
+        <div class="fc"><label>Heure</label><input type="time" id="news-time-inp" placeholder="14:30"></div>
+        <div class="fc"><label>Nom</label><input type="text" id="news-name-inp" placeholder="NFP / CPI / BCE..."></div>
+        <div class="fc" style="flex:0 0 60px"><label>Impact</label>
+          <select id="news-impact-inp"><option value="red">🔴 Rouge</option><option value="orange">🟠 Orange</option></select>
+        </div>
+      </div>
+      <button style="width:100%;padding:5px;background:var(--bg3);border:1px solid var(--bd2);color:var(--A);font-family:var(--FM);font-size:8px;border-radius:2px;cursor:pointer;margin-top:4px" onclick="addNews()">+ AJOUTER NEWS</button>
+      <div style="margin-top:6px;display:flex;gap:4px">
+        <button style="flex:1;padding:5px;background:var(--bg3);border:1px solid var(--bd2);color:var(--G);font-family:var(--FM);font-size:8px;border-radius:2px;cursor:pointer" onclick="loadRecurringNews()">⟳ CHARGER NEWS RÉCURRENTES</button>
+        <button style="flex:1;padding:5px;background:var(--bg3);border:1px solid var(--bd2);color:var(--R);font-family:var(--FM);font-size:8px;border-radius:2px;cursor:pointer" onclick="clearNews()">✕ EFFACER</button>
+      </div>
+      <!-- News récurrentes référence -->
+      <div style="margin-top:8px;padding:6px;background:var(--bg3);border-radius:3px;border:1px solid var(--bd)">
+        <div style="font-family:var(--FM);font-size:7px;color:var(--mu);margin-bottom:5px;letter-spacing:1px">CALENDRIER RÉCURRENT (heure Paris)</div>
+        <div style="font-family:var(--FM);font-size:7px;color:var(--mu);line-height:2">
+          🔴 NFP (1er ven. du mois) → 14h30<br>
+          🔴 CPI USA (mensuel) → 14h30<br>
+          🔴 FOMC (8x/an) → 20h00<br>
+          🔴 BCE Taux (mensuel) → 14h15<br>
+          🔴 PIB USA (trimestriel) → 14h30<br>
+          🟠 ISM Manufacturing → 16h00<br>
+          🟠 Retail Sales USA → 14h30<br>
+          🟠 CPI Europe → 11h00
+        </div>
+      </div>
+    </div>
+
+    <div class="fs">
+      <div class="fsl">Données</div>
+      <button style="width:100%;padding:6px;background:rgba(255,34,68,.08);border:1px solid rgba(255,34,68,.15);color:var(--R);font-family:var(--FM);font-size:8px;border-radius:2px;cursor:pointer;margin-bottom:5px" onclick="if(confirm('Effacer tous les trades ?'))clearAll()">EFFACER TOUS LES TRADES</button>
+      <button style="width:100%;padding:6px;background:var(--bg3);border:1px solid var(--bd2);color:var(--mu);font-family:var(--FM);font-size:8px;border-radius:2px;cursor:pointer;margin-bottom:5px" onclick="exportJSON()">EXPORTER JSON</button>
+      <input type="file" id="import-file" accept=".json" style="font-size:8px;margin-bottom:5px">
+      <button style="width:100%;padding:6px;background:var(--bg3);border:1px solid var(--bd2);color:var(--G);font-family:var(--FM);font-size:8px;border-radius:2px;cursor:pointer" onclick="importJSON()">IMPORTER JSON</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN CENTER ══ -->
+<div class="MC">
+  <div class="mnav">
+    <button class="mtab on" onclick="mTab(this,'dashboard')">DASHBOARD</button>
+    <button class="mtab" onclick="mTab(this,'psycho')">PSYCHO</button>
+    <button class="mtab" onclick="mTab(this,'analyse')">ANALYSE</button>
+    <button class="mtab" onclick="mTab(this,'vision')">VISION LOG</button>
+    <button class="mtab" onclick="mTab(this,'historique')">HISTORIQUE</button>
+  </div>
+  <div class="mbody">
+
+    <!-- DASHBOARD -->
+    <div id="v-dashboard">
+      <div class="krow" id="krow"></div>
+      <div id="ai-ins"></div>
+      <div class="p2" id="charts"></div>
+    </div>
+
+    <!-- PSYCHO DASHBOARD -->
+    <div id="v-psycho" style="display:none">
+      <div class="p3" id="psych-krow"></div>
+      <div class="p2" id="psych-charts"></div>
+    </div>
+
+    <!-- ANALYSE -->
+    <div id="v-analyse" style="display:none">
+      <div class="flr">
+        <select class="flt" id="fa-setup" onchange="renderAnalyse()"><option value="">Tous setups</option></select>
+        <select class="flt" id="fa-sess" onchange="renderAnalyse()"><option value="">Toutes sessions</option></select>
+        <select class="flt" id="fa-dir" onchange="renderAnalyse()"><option value="">Long+Short</option><option>LONG</option><option>SHORT</option></select>
+        <select class="flt" id="fa-grade" onchange="renderAnalyse()"><option value="">Tous grades</option><option>A</option><option>B</option><option>C</option></select>
+      </div>
+      <div id="analyse-content"></div>
+    </div>
+
+    <!-- VISION LOG -->
+    <div id="v-vision" style="display:none">
+      <div id="vision-log-content"></div>
+    </div>
+
+    <!-- HISTORIQUE -->
+    <div id="v-historique" style="display:none">
+      <div class="flr">
+        <select class="flt" id="fh-grade" onchange="renderHistorique()"><option value="">Tous grades</option><option>A</option><option>B</option><option>C</option></select>
+        <select class="flt" id="fh-res" onchange="renderHistorique()"><option value="">Gain+Perte</option><option>WIN</option><option>LOSS</option></select>
+        <select class="flt" id="fh-setup" onchange="renderHistorique()"><option value="">Tous setups</option></select>
+      </div>
+      <div id="historique-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SIDEBAR DROITE ══ -->
+<div class="SR">
+  <div class="aih">
+    <div class="aitr">
+      <div class="aid"></div>
+      <div class="ain">NEXUS</div>
+      <div style="margin-left:auto;display:flex;gap:4px">
+        <button class="rbtn" onclick="runScan()">SCAN</button>
+        <button class="rbtn" onclick="refreshRadar()">↺</button>
+      </div>
+    </div>
+    <div class="ais" id="ai-status">En attente...</div>
+    <div class="clk" id="clock">--:--:--</div>
+    <div id="clk-date" style="font-family:var(--FM);font-size:7px;color:var(--mu)">Paris CET</div>
+    <div class="smini" id="smini"></div>
+  </div>
+  <div class="rsec">
+    <div style="font-family:var(--FM);font-size:7px;letter-spacing:1.5px;color:var(--mu);margin-bottom:5px;display:flex;justify-content:space-between">
+      <span>SIGNAL MARCHÉ</span>
+      <span id="dxy-badge" style="color:var(--mu)"></span>
+    </div>
+    <div id="global-signal"></div>
+  </div>
+  <div class="qqs">
+    <button class="qq" onclick="ask('Meilleur combo Grade A selon mon historique complet — setup + BOS + KZ + conditions psycho.')">▶ Meilleur combo Grade A</button>
+    <button class="qq" onclick="ask('Analyse mon profil psychologique et dis-moi quand je ne devrais pas trader.')">▶ Profil psycho — quand éviter</button>
+    <button class="qq" onclick="ask('Corrélation entre mon état mental et mes résultats. Quels états produisent des gains ?')">▶ Mental × Résultats</button>
+    <button class="qq" onclick="ask('Est-ce que je devrais trader maintenant ? Analyse heure + session + mon historique.')">▶ Trader maintenant ?</button>
+    <button class="qq" onclick="ask('Analyse mes patterns visuels Grade A — ce que tu vois systématiquement sur mes captures gagnantes.')">▶ Patterns visuels gagnants</button>
+  </div>
+  <div class="csec">
+    <div style="font-family:var(--FM);font-size:7px;letter-spacing:1.5px;color:var(--mu);margin-bottom:5px">TOP COMBOS ACTIFS</div>
+    <div id="combos-list"></div>
+  </div>
+  <div class="chat">
+    <div class="chd"><div class="aid" style="width:5px;height:5px"></div>NEXUS v6 · INTELLIGENCE</div>
+    <div class="cms" id="chat-msgs">
+      <div class="msg ai">NEXUS v6 opérationnel — Journal ICT/SMC · Vision AI · Psychology Tracker · DXY · News Filter. Glisse une capture ou pose une question.</div>
+    </div>
+    <div class="cinp">
+      <input type="text" id="ai-inp" placeholder="Question à NEXUS..." onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="csnd" onclick="sendMsg()">→</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+const TK='nxt_v6_trades', MK='nxt_v6_mem', AK='nxt_apikey', TGK='nxt_tg', VK='nxt_v6_vision';
+let trades=[], visionLog=[], charts={};
+let aiMem={
+  setup:{},sess:{},conf:{},sweep:{},bos:{},kz:{},extra:{},time:{},
+  rules:[],visualPatterns:[],
+  psych:{confiance:[],stress:[],focus:[],energie:[],patience:[],discipline:[],calme:[],hesitation:[],satisfaction:[],regrets:[]},
+  psychCorr:[]
+};
+let apiKey='', tgToken='', tgChat='';
+let selGrade='A', selConf=[], selSweep=[], selBos=[], selKz=[], selExtra=[];
+let boolState={fomo:'non',plan:'oui',doutes:'non',revenge:'non',overtrade:'non'};
+let vImgB64=null;
+let newsCache=[];
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+function init(){
+  loadAll(); loadNewsCache(); initForm(); updateClock();
+  setInterval(updateClock,1000);
+  setInterval(()=>{checkNewsWarning();renderNewsList();},30000);
+  renderAll(); updateFilters(); renderMemPanel(); updatePsych(); renderNewsList(); checkNewsWarning();
+  document.getElementById('tg-on').onchange=e=>{
+    document.getElementById('tg-fields').style.display=e.target.checked?'block':'none';
+  };
+  checkNewsWarning();
+}
+
+function loadAll(){
+  try{const d=localStorage.getItem(TK);if(d)trades=JSON.parse(d);}catch(e){trades=[];}
+  try{const m=localStorage.getItem(MK);if(m){const pm=JSON.parse(m);aiMem={...aiMem,...pm};}}catch(e){}
+  try{const v=localStorage.getItem(VK);if(v)visionLog=JSON.parse(v);}catch(e){visionLog=[];}
+  apiKey=localStorage.getItem(AK)||'';
+  const tg=JSON.parse(localStorage.getItem(TGK)||'{}');
+  tgToken=tg.token||''; tgChat=tg.chat||'';
+  if(apiKey){
+    document.getElementById('ai-status').textContent='NEXUS v6 · Vision+Psych+DXY';
+    document.getElementById('cfg-key').value=apiKey;
+  }
+  if(tgToken){document.getElementById('cfg-tg-token').value=tgToken;document.getElementById('cfg-tg-chat').value=tgChat;}
+  if(!trades.length)loadDemo();
+}
+
+function saveAll(){
+  localStorage.setItem(TK,JSON.stringify(trades));
+  localStorage.setItem(MK,JSON.stringify(aiMem));
+  localStorage.setItem(VK,JSON.stringify(visionLog.slice(-30)));
+}
+
+function loadDemo(){
+  const psych=()=>({confiance:4,stress:2,focus:4,energie:4,patience:3,discipline:4,calme:4,hesitation:2,satisfaction:4,regrets:1,fomo:'non',plan:'oui',doutes:'non',revenge:'non',overtrade:'non',notes:''});
+  const psychB=()=>({confiance:2,stress:4,focus:2,energie:3,patience:2,discipline:2,calme:2,hesitation:4,satisfaction:2,regrets:4,fomo:'oui',plan:'non',doutes:'oui',revenge:'non',overtrade:'non',notes:''});
+  trades=[
+    {id:1,date:'2026-04-01',time:'09:15',instrument:'EUR/USD',tf:'M1',setup:'BPR',confluences:['H1 FVG','HVN/POC','DXY corr.'],sweep:['Asia H'],bos:['CHoCH Bull'],kz:['London Open KZ'],extra:['Displacement fort','DXY inverse'],direction:'LONG',session:'London',htfH4:'Bullish',htfH1:'Bullish',r:2.5,pnl:1250,grade:'A',error:'Aucune – Exécution parfaite',why:'BPR H1 + CHoCH + DXY inversé',notes:'',win:true,psych:psych(),visionGrade:'A'},
+    {id:2,date:'2026-04-02',time:'10:30',instrument:'EUR/USD',tf:'M1',setup:'IFVG',confluences:['H4 FVG','H1 FVG','VWAP'],sweep:['PDH'],bos:['BOS Bull'],kz:['London Open KZ'],extra:['AMD Setup'],direction:'LONG',session:'London',htfH4:'Bullish',htfH1:'Bullish',r:3.0,pnl:1500,grade:'A',error:'Aucune – Exécution parfaite',why:'',notes:'',win:true,psych:psych(),visionGrade:'A'},
+    {id:3,date:'2026-04-03',time:'14:20',instrument:'EUR/USD',tf:'M5',setup:'FVG MTF',confluences:['M15 FVG'],sweep:['Open'],bos:[],kz:['NY Open KZ'],extra:[],direction:'SHORT',session:'NY',htfH4:'Bearish',htfH1:'Bearish',r:-1,pnl:-500,grade:'C',error:'FOMO (entrée trop tard)',why:'',notes:'',win:false,psych:psychB(),visionGrade:'C'},
+    {id:4,date:'2026-04-07',time:'09:45',instrument:'EUR/USD',tf:'M1',setup:'BPR',confluences:['H1 FVG','EQH/EQL'],sweep:['EQH'],bos:['MSS Bear'],kz:['London Open KZ'],extra:['Judas Swing'],direction:'SHORT',session:'London',htfH4:'Bearish',htfH1:'Bearish',r:1.8,pnl:900,grade:'B',error:'Aucune – Exécution parfaite',why:'',notes:'',win:true,psych:psych(),visionGrade:'B'},
+    {id:5,date:'2026-04-08',time:'15:00',instrument:'EUR/USD',tf:'M1',setup:'OTE',confluences:['H4 FVG','HVN/POC','VWAP'],sweep:['PDL'],bos:['BOS Bull','CHoCH Bull'],kz:['NY Open KZ'],extra:['OTE 62%','Displacement fort','DXY inverse'],direction:'LONG',session:'NY',htfH4:'Bullish',htfH1:'Bullish',r:4.0,pnl:2000,grade:'A',error:'Aucune – Exécution parfaite',why:'',notes:'',win:true,psych:psych(),visionGrade:'A'},
+    {id:6,date:'2026-04-09',time:'09:00',instrument:'EUR/USD',tf:'M1',setup:'IFVG',confluences:['H1 FVG'],sweep:['Asia L'],bos:[],kz:['Frankfurt KZ'],extra:[],direction:'LONG',session:'Frankfurt',htfH4:'Bullish',htfH1:'Neutre',r:-1,pnl:-500,grade:'B',error:'Stop trop serré',why:'',notes:'',win:false,psych:{...psych(),stress:4,hesitation:4},visionGrade:null},
+    {id:7,date:'2026-04-10',time:'14:45',instrument:'EUR/USD',tf:'M1',setup:'BPR',confluences:['H1 FVG','M5 FVG','EQH/EQL','DXY corr.'],sweep:['EQL'],bos:['CHoCH Bear'],kz:['NY Open KZ'],extra:['Displacement fort','DXY inverse'],direction:'SHORT',session:'NY',htfH4:'Bearish',htfH1:'Bearish',r:2.2,pnl:1100,grade:'A',error:'Aucune – Exécution parfaite',why:'',notes:'',win:true,psych:psych(),visionGrade:'A'},
+    {id:8,date:'2026-04-14',time:'10:10',instrument:'EUR/USD',tf:'M5',setup:'FVG MTF',confluences:['H4 FVG','M15 FVG'],sweep:['PWH'],bos:[],kz:['London Open KZ'],extra:[],direction:'LONG',session:'London',htfH4:'Bullish',htfH1:'Bullish',r:-1,pnl:-500,grade:'C',error:'FOMO (entrée trop tard)',why:'',notes:'',win:false,psych:psychB(),visionGrade:'C'},
+    {id:9,date:'2026-04-15',time:'15:30',instrument:'EUR/USD',tf:'M1',setup:'BPR',confluences:['H1 FVG','HVN/POC'],sweep:['Open'],bos:['BOS Bear'],kz:['NY Open KZ'],extra:[],direction:'SHORT',session:'NY',htfH4:'Bearish',htfH1:'Bearish',r:1.5,pnl:750,grade:'B',error:'Aucune – Exécution parfaite',why:'',notes:'',win:true,psych:psych(),visionGrade:'B'},
+    {id:10,date:'2026-04-16',time:'09:30',instrument:'EUR/USD',tf:'M1',setup:'IFVG',confluences:['H4 FVG','H1 FVG','HVN/POC','VWAP','DXY corr.'],sweep:['Asia H'],bos:['CHoCH Bull','BOS Bull'],kz:['London Open KZ'],extra:['Displacement fort','AMD Setup','DXY inverse'],direction:'LONG',session:'London',htfH4:'Bullish',htfH1:'Bullish',r:3.5,pnl:1750,grade:'A',error:'Aucune – Exécution parfaite',why:'4 confluences + DXY',notes:'',win:true,psych:psych(),visionGrade:'A'},
+  ];
+  trades.forEach(t=>updateMem(t));
+  saveAll();
+}
+
+// ══════════════════════════════════════════════
+// PSYCHOLOGIE
+// ══════════════════════════════════════════════
+function updatePsych(){
+  const fields=['confiance','stress','focus','energie','patience','discipline','calme','hesitation','satisfaction','regrets'];
+  fields.forEach(f=>{
+    const el=document.getElementById('ps-'+f);
+    if(el)document.getElementById('lbl-'+f).textContent=el.value;
+  });
+  // Score global
+  const pos=['confiance','focus','energie','patience','discipline','calme','satisfaction'];
+  const neg=['stress','hesitation','regrets'];
+  let score=0;
+  pos.forEach(f=>{const el=document.getElementById('ps-'+f);if(el)score+=parseInt(el.value);});
+  neg.forEach(f=>{const el=document.getElementById('ps-'+f);if(el)score+=(6-parseInt(el.value));});
+  const max=pos.length*5+neg.length*5;
+  const pct=score/max*100;
+  const fill=document.getElementById('psych-score-fill');
+  if(fill){
+    const col=pct>=70?'var(--G)':pct>=50?'var(--A)':'var(--R)';
+    fill.style.width=pct+'%';
+    fill.style.background=col;
+  }
+  const lbl=document.getElementById('psych-score-label');
+  if(lbl){
+    const txt=pct>=70?'État optimal — Trade !':pct>=50?'État moyen — Sois sélectif':'État dégradé — Évite de trader';
+    const col=pct>=70?'var(--G)':pct>=50?'var(--A)':'var(--R)';
+    lbl.textContent=txt;
+    lbl.style.color=col;
+  }
+}
+
+function toggleBool(btn,val){
+  const b=btn.dataset.bool;
+  const parent=btn.parentElement;
+  parent.querySelectorAll('.pbtn').forEach(x=>x.classList.remove('on'));
+  btn.classList.add('on');
+  boolState[b]=val;
+}
+
+function getPsychData(){
+  const fields=['confiance','stress','focus','energie','patience','discipline','calme','hesitation','satisfaction','regrets'];
+  const d={};
+  fields.forEach(f=>{const el=document.getElementById('ps-'+f);if(el)d[f]=parseInt(el.value);});
+  d.fomo=boolState.fomo;
+  d.plan=boolState.plan;
+  d.doutes=boolState.doutes;
+  d.revenge=boolState.revenge;
+  d.overtrade=boolState.overtrade;
+  d.notes=document.getElementById('ps-notes').value;
+  return d;
+}
+
+function getPsychScore(p){
+  if(!p)return 50;
+  const pos=['confiance','focus','energie','patience','discipline','calme','satisfaction'];
+  const neg=['stress','hesitation','regrets'];
+  let s=0,max=0;
+  pos.forEach(f=>{if(p[f]){s+=p[f];max+=5;}});
+  neg.forEach(f=>{if(p[f]){s+=(6-p[f]);max+=5;}});
+  if(p.fomo==='oui')s-=3;
+  if(p.plan==='non')s-=4;
+  if(p.doutes==='oui')s-=2;
+  if(p.revenge==='oui')s-=5;
+  if(p.overtrade==='oui')s-=3;
+  return max>0?Math.round(Math.max(0,Math.min(100,s/max*100))):50;
+}
+
+async function analyzePsych(){
+  if(!apiKey){addMsg('sys','Clé API requise.');return;}
+  const p=getPsychData();
+  const score=getPsychScore(p);
+  const t=addMsg('psych','🧠 Analyse psychologique...');
+  try{
+    const txt=await callNexus(
+      `Analyse mon état psychologique avant ce trade:
+Confiance:${p.confiance}/5 Stress:${p.stress}/5 Focus:${p.focus}/5 Énergie:${p.energie}/5 Patience:${p.patience}/5 Discipline:${p.discipline}/5
+Pendant: Calme:${p.calme}/5 Hésitation:${p.hesitation}/5
+Après: Satisfaction:${p.satisfaction}/5 Regrets:${p.regrets}/5
+FOMO:${p.fomo} Plan suivi:${p.plan} Doutes:${p.doutes} Revenge:${p.revenge} Overtrade:${p.overtrade}
+Score global: ${score}/100
+Notes: ${p.notes||'–'}
+
+Dis-moi: 1) Est-ce que j'aurais dû trader dans cet état ? 2) Quel pattern psychologique tu détectes ? 3) Conseil concret pour améliorer mon état mental avant le prochain trade.`,
+      500);
+    t.textContent=txt;
+  }catch(e){t.textContent='Erreur: '+e.message;}
+}
+
+async function analyzePsychPatterns(){
+  if(!apiKey){addMsg('sys','Clé API requise.');return;}
+  const psychTrades=trades.filter(t=>t.psych);
+  if(psychTrades.length<3){addMsg('sys','Minimum 3 trades avec données psycho.');return;}
+  const t=addMsg('sys','Analyse patterns psychologiques...');
+  try{
+    const data=psychTrades.map(tr=>`[${tr.date} G${tr.grade} ${tr.win?'WIN':'LOSS'} Score:${getPsychScore(tr.psych)} Conf:${tr.psych.confiance} Stress:${tr.psych.stress} FOMO:${tr.psych.fomo} Plan:${tr.psych.plan}]`).join(' ');
+    const txt=await callNexus(
+      `Analyse mes patterns psychologiques sur ${psychTrades.length} trades:
+${data}
+
+Identifie:
+1. Mon profil psychologique (trading sous stress ? sous-confiance ? FOMO récurrent ?)
+2. La corrélation exacte entre mon état mental et mes résultats
+3. Les 3 déclencheurs émotionnels qui causent mes pertes
+4. Mon état mental optimal pour trader (chiffres précis)
+5. Quand je dois absolument m'arrêter`,
+      700);
+    t.textContent=txt;
+    document.getElementById('mem-psych-profile').innerHTML=txt.split('\n').filter(l=>l.trim()).slice(0,8).map(l=>`<div style="padding:2px 0;border-bottom:1px solid var(--bd);font-size:8px">${l}</div>`).join('');
+  }catch(e){t.textContent='Erreur: '+e.message;}
+}
+
+// Psycho Dashboard
+function renderPsychoDashboard(){
+  const psychTrades=trades.filter(t=>t.psych&&t.psych.confiance);
+  if(!psychTrades.length){
+    document.getElementById('psych-krow').innerHTML='<div class="nd pf">Pas encore de données psychologiques. Remplis l\'onglet PSYCHO avant chaque trade.</div>';
+    document.getElementById('psych-charts').innerHTML='';
+    return;
+  }
+  const wins=psychTrades.filter(t=>t.win);
+  const losses=psychTrades.filter(t=>!t.win);
+  const avgScore=arr=>arr.length?Math.round(arr.reduce((s,t)=>s+getPsychScore(t.psych),0)/arr.length):0;
+  const avgField=(arr,f)=>arr.length?+(arr.reduce((s,t)=>s+(t.psych[f]||3),0)/arr.length).toFixed(1):0;
+
+  document.getElementById('psych-krow').innerHTML=[
+    {l:'SCORE WIN',v:avgScore(wins),s:wins.length+'t gagnants',c:'var(--G)'},
+    {l:'SCORE LOSS',v:avgScore(losses),s:losses.length+'t perdants',c:'var(--R)'},
+    {l:'FOMO RATE',v:Math.round(psychTrades.filter(t=>t.psych.fomo==='oui').length/psychTrades.length*100)+'%',s:'des trades',c:'var(--A)'},
+    {l:'PLAN SUIVI',v:Math.round(psychTrades.filter(t=>t.psych.plan==='oui').length/psychTrades.length*100)+'%',s:'discipline',c:'var(--C)'},
+    {l:'ÉTATS ANALYSÉS',v:psychTrades.length,s:'trades trackés',c:'var(--P)'}
+  ].map(k=>`<div class="kpi" style="--kc:${k.c}"><div class="kl">${k.l}</div><div class="kv">${k.v}</div><div class="ks">${k.s}</div></div>`).join('');
+
+  // Corrélation confiance × résultat
+  document.getElementById('psych-charts').innerHTML=`
+    <div class="pan"><div class="pt">Confiance WIN vs LOSS</div>
+      ${barLine('Win',avgField(wins,'confiance')/5*100,'var(--G)',avgField(wins,'confiance')+'/5')}
+      ${barLine('Loss',avgField(losses,'confiance')/5*100,'var(--R)',avgField(losses,'confiance')+'/5')}
+    </div>
+    <div class="pan"><div class="pt">Stress WIN vs LOSS</div>
+      ${barLine('Win',avgField(wins,'stress')/5*100,'var(--G)',avgField(wins,'stress')+'/5')}
+      ${barLine('Loss',avgField(losses,'stress')/5*100,'var(--R)',avgField(losses,'stress')+'/5')}
+    </div>
+    <div class="pan"><div class="pt">Discipline WIN vs LOSS</div>
+      ${barLine('Win',avgField(wins,'discipline')/5*100,'var(--G)',avgField(wins,'discipline')+'/5')}
+      ${barLine('Loss',avgField(losses,'discipline')/5*100,'var(--R)',avgField(losses,'discipline')+'/5')}
+    </div>
+    <div class="pan"><div class="pt">Erreurs Psychologiques</div>
+      ${[['FOMO',psychTrades.filter(t=>t.psych.fomo==='oui').length],['Plan non suivi',psychTrades.filter(t=>t.psych.plan==='non').length],['Doutes',psychTrades.filter(t=>t.psych.doutes==='oui').length],['Revenge',psychTrades.filter(t=>t.psych.revenge==='oui').length],['Overtrade',psychTrades.filter(t=>t.psych.overtrade==='oui').length]].map(([k,v])=>barLine(k,v/psychTrades.length*100,'var(--R)',v+'t')).join('')}
+    </div>
+    <div class="pan pf"><div class="pt">Évolution Score Mental</div><div class="cw"><canvas id="psych-curve"></canvas></div></div>`;
+
+  // Courbe score mental
+  const ctx=document.getElementById('psych-curve');
+  if(ctx){
+    if(charts.psych)charts.psych.destroy();
+    const sorted=[...psychTrades].sort((a,b)=>a.date.localeCompare(b.date));
+    charts.psych=new Chart(ctx,{type:'line',
+      data:{labels:sorted.map((_,i)=>'T'+(i+1)),
+        datasets:[
+          {label:'Score Mental',data:sorted.map(t=>getPsychScore(t.psych)),borderColor:'#c77dff',backgroundColor:'rgba(199,125,255,.1)',fill:true,tension:.4,pointRadius:3,pointBackgroundColor:sorted.map(t=>t.win?'#00f0a0':'#ff2244'),borderWidth:2},
+        ]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{x:{ticks:{color:'#3d5878',font:{size:7}},grid:{color:'#162030'}},y:{min:0,max:100,ticks:{color:'#3d5878',font:{size:7},callback:v=>v+'%'},grid:{color:'#162030'}}}}});
+  }
+}
+
+// ══════════════════════════════════════════════
+// NEWS FILTER
+// ══════════════════════════════════════════════
+async function checkNews(){
+  const el=document.getElementById('news-display');
+  el.textContent='Vérification...';
+  // Simulation news (en production: appel API Forex Factory)
+  const paris=getParis();
+  const h=paris.getHours();
+  const simulatedNews=[
+    {time:'09:00',impact:'high',name:'EUR CPI'},
+    {time:'14:30',impact:'high',name:'USD NFP'},
+    {time:'16:00',impact:'medium',name:'USD ISM'},
+  ];
+  newsCache=simulatedNews;
+  el.innerHTML=simulatedNews.map(n=>`<div style="padding:2px 0;color:${n.impact==='high'?'var(--R)':'var(--A)'}">⬡ ${n.time} — ${n.name} (${n.impact})</div>`).join('')||'Aucune news rouge aujourd\'hui.';
+  checkNewsWarning();
+}
+
+function checkNewsWarning(){
+  const paris=getParis();
+  const dec=paris.getHours()+paris.getMinutes()/60;
+  const warn=document.getElementById('news-warn');
+  if(!warn)return;
+  // Vérif si news dans 30min
+  const nearNews=newsCache.filter(n=>{
+    const[h,m]=n.time.split(':').map(Number);
+    const ndec=h+m/60;
+    return n.impact==='high'&&Math.abs(ndec-dec)<0.5;
+  });
+  warn.classList.toggle('show',nearNews.length>0);
+  if(nearNews.length>0)warn.textContent=`⚠ NEWS ${nearNews[0].name} à ${nearNews[0].time} — Trading déconseillé`;
+}
+
+// ══════════════════════════════════════════════
+// VISION AI
+// ══════════════════════════════════════════════
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('vzone').classList.remove('drag');
+  const f=e.dataTransfer.files[0];
+  if(f&&f.type.startsWith('image/'))processVFile(f);
+}
+function handleVFile(e){const f=e.target.files[0];if(f)processVFile(f);}
+function processVFile(file){
+  const r=new FileReader();
+  r.onload=ev=>{
+    vImgB64=ev.target.result.split(',')[1];
+    const p=document.getElementById('vprev');
+    p.src=ev.target.result;p.classList.add('show');
+  };
+  r.readAsDataURL(file);
+}
+
+async function analyzeVision(){
+  if(!vImgB64){addMsg('ai','Glisse d\'abord une capture.');return;}
+  if(!apiKey){addMsg('ai','Clé API requise.');return;}
+  const tf=document.getElementById('vtf').value;
+  const moment=document.getElementById('vmoment').value;
+  const el=document.getElementById('vresult');
+  el.classList.add('show');el.innerHTML='<span style="color:var(--P)">⬡ Analyse Vision IA...</span>';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-opus-4-6',max_tokens:700,
+        system:`Tu es NEXUS Vision AI expert ICT/SMC. Analyse le graphique et identifie: structure (BOS/CHoCH/MSS), liquidité (sweeps), zones (FVG/BPR/IFVG/OB), bias, KZ. Évalue GRADE A/B/C selon l'historique du trader. Contexte: ${buildCtx()}`,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:'image/png',data:vImgB64}},
+          {type:'text',text:`Graphique ${tf} ${moment==='pre'?'avant entrée':'post-trade'}. Grade A/B/C + conditions vues + recommandation 2 phrases.`}
+        ]}]
+      })
+    });
+    const data=await res.json();
+    const analysis=data.content?.map(x=>x.text||'').join('')||'Erreur.';
+    const gm=analysis.match(/GRADE[:\s]+([ABC])/i);
+    const grade=gm?gm[1]:'B';
+    const gc={'A':'vg-a','B':'vg-b','C':'vg-c'}[grade]||'vg-b';
+    el.innerHTML=`<span class="vgrade ${gc}">GRADE ${grade}</span><br>${analysis.replace(/\*\*/g,'').substring(0,300)}`;
+    visionLog.push({id:Date.now(),date:new Date().toISOString(),tf,moment,grade,analysis});
+    if(!aiMem.visualPatterns)aiMem.visualPatterns=[];
+    aiMem.visualPatterns.push({grade,analysis:analysis.substring(0,300),tf,date:new Date().toISOString()});
+    if(aiMem.visualPatterns.length>50)aiMem.visualPatterns.shift();
+    saveAll();
+    addMsg('vision',`📸 ${tf} ${moment==='pre'?'pré':'post'}-trade → Grade ${grade}`);
+    document.querySelectorAll('[data-g]').forEach(b=>b.classList.remove('on'));
+    const gb=document.querySelector(`[data-g="${grade}"]`);
+    if(gb){gb.classList.add('on');selGrade=grade;}
+  }catch(e){el.innerHTML=`<span style="color:var(--R)">Erreur: ${e.message}</span>`;}
+}
+
+async function analyzeVisualPatterns(){
+  if(!apiKey){addMsg('sys','Clé API requise.');return;}
+  const vp=aiMem.visualPatterns||[];
+  if(!vp.length){addMsg('sys','Pas encore de patterns visuels.');return;}
+  const t=addMsg('sys','Analyse patterns visuels...');
+  try{
+    const txt=await callNexus(`Analyse mes ${vp.length} patterns visuels ICT. Grade A: ${vp.filter(p=>p.grade==='A').length}. Identifie ce qui revient systématiquement dans mes Grade A vs Grade C.`,500);
+    t.textContent=txt;
+  }catch(e){t.textContent='Erreur.';}
+}
+
+// ══════════════════════════════════════════════
+// FORM
+// ══════════════════════════════════════════════
+function initForm(){
+  const n=new Date();
+  document.getElementById('f-date').value=n.toISOString().split('T')[0];
+  document.getElementById('f-time').value=n.toTimeString().slice(0,5);
+  document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{selGrade=b.dataset.g;document.querySelectorAll('[data-g]').forEach(x=>x.classList.remove('on'));b.classList.add('on');});
+  document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{b.classList.toggle('on');selConf=Array.from(document.querySelectorAll('[data-c].on')).map(x=>x.dataset.c);});
+  document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{b.classList.toggle('on');selSweep=Array.from(document.querySelectorAll('[data-s].on')).map(x=>x.dataset.s);});
+  document.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{b.classList.toggle('on');selBos=Array.from(document.querySelectorAll('[data-b].on')).map(x=>x.dataset.b);});
+  document.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{b.classList.toggle('on');selKz=Array.from(document.querySelectorAll('[data-k].on')).map(x=>x.dataset.k);});
+  document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{b.classList.toggle('on');selExtra=Array.from(document.querySelectorAll('[data-e].on')).map(x=>x.dataset.e);});
+}
+
+function addTrade(){
+  const setup=document.getElementById('f-setup').value;
+  const rStr=document.getElementById('f-r').value.trim();
+  if(!setup){alert('Choisis un setup');return;}
+  if(!rStr){alert('Entre le résultat R');return;}
+  const r=parseFloat(rStr.replace('+','').split('/')[0])||0;
+  const t={
+    id:Date.now(),
+    date:document.getElementById('f-date').value,
+    time:document.getElementById('f-time').value,
+    instrument:document.getElementById('f-inst').value,
+    tf:document.getElementById('f-tf').value,
+    setup,confluences:[...selConf],sweep:[...selSweep],bos:[...selBos],kz:[...selKz],extra:[...selExtra],
+    direction:document.getElementById('f-dir').value,
+    session:document.getElementById('f-sess').value,
+    htfH4:document.getElementById('f-h4').value,
+    htfH1:document.getElementById('f-h1').value,
+    r,pnl:parseFloat(document.getElementById('f-pnl').value)||0,
+    grade:selGrade,
+    error:document.getElementById('f-err').value,
+    why:document.getElementById('f-why').value,
+    notes:document.getElementById('f-notes').value,
+    win:r>0,
+    psych:getPsychData(),
+    visionGrade:document.getElementById('vresult').classList.contains('show')?selGrade:null
+  };
+  trades.push(t);
+  updateMem(t);
+  saveAll();
+  resetForm();
+  renderAll();
+  updateFilters();
+  renderMemPanel();
+  if(apiKey)setTimeout(()=>autoFeedback(t),400);
+}
+
+function resetForm(){
+  document.getElementById('f-setup').value='';
+  document.getElementById('f-r').value='';document.getElementById('f-pnl').value='';
+  document.getElementById('f-why').value='';document.getElementById('f-notes').value='';
+  document.getElementById('f-err').selectedIndex=0;
+  document.querySelectorAll('[data-c].on,[data-s].on,[data-b].on,[data-k].on,[data-e].on').forEach(b=>b.classList.remove('on'));
+  selConf=[];selSweep=[];selBos=[];selKz=[];selExtra=[];
+  selGrade='A';
+  document.querySelectorAll('[data-g]').forEach(b=>b.classList.remove('on'));
+  document.querySelector('[data-g="A"]').classList.add('on');
+  vImgB64=null;
+  document.getElementById('vprev').classList.remove('show');
+  document.getElementById('vresult').classList.remove('show');
+  boolState={fomo:'non',plan:'oui',doutes:'non',revenge:'non',overtrade:'non'};
+  document.querySelectorAll('.pbtn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('[data-bool="plan"][data-val="oui"]').forEach(b=>b.classList.add('on'));
+  document.querySelectorAll('[data-bool="fomo"][data-val="non"]').forEach(b=>b.classList.add('on'));
+  document.querySelectorAll('[data-bool="doutes"][data-val="non"]').forEach(b=>b.classList.add('on'));
+  document.querySelectorAll('[data-bool="revenge"][data-val="non"]').forEach(b=>b.classList.add('on'));
+  document.querySelectorAll('[data-bool="overtrade"][data-val="non"]').forEach(b=>b.classList.add('on'));
+  ['confiance','stress','focus','energie','patience','discipline','calme','hesitation','satisfaction','regrets'].forEach(f=>{
+    const el=document.getElementById('ps-'+f);if(el){el.value=3;document.getElementById('lbl-'+f).textContent='3';}
+  });
+  document.getElementById('ps-notes').value='';
+  updatePsych();
+}
+
+function deleteTrade(id){
+  trades=trades.filter(t=>t.id!==id);
+  rebuildMem();saveAll();renderAll();updateFilters();
+}
+
+// ══════════════════════════════════════════════
+// MEMORY ENGINE
+// ══════════════════════════════════════════════
+function updateMem(t){
+  const up=(obj,k)=>{if(!obj[k])obj[k]={w:0,t:0,r:0};obj[k].t++;obj[k].r+=(t.r||0);if(t.win)obj[k].w++;};
+  up(aiMem.setup,t.setup);
+  up(aiMem.sess,t.session);
+  (t.confluences||[]).forEach(c=>{if(!aiMem.conf[c])aiMem.conf[c]={w:0,t:0};aiMem.conf[c].t++;if(t.win)aiMem.conf[c].w++;});
+  (t.sweep||[]).forEach(s=>{if(!aiMem.sweep[s])aiMem.sweep[s]={w:0,t:0};aiMem.sweep[s].t++;if(t.win)aiMem.sweep[s].w++;});
+  (t.bos||[]).forEach(b=>{if(!aiMem.bos[b])aiMem.bos[b]={w:0,t:0};aiMem.bos[b].t++;if(t.win)aiMem.bos[b].w++;});
+  (t.kz||[]).forEach(k=>{if(!aiMem.kz[k])aiMem.kz[k]={w:0,t:0};aiMem.kz[k].t++;if(t.win)aiMem.kz[k].w++;});
+  (t.extra||[]).forEach(e=>{if(!aiMem.extra[e])aiMem.extra[e]={w:0,t:0};aiMem.extra[e].t++;if(t.win)aiMem.extra[e].w++;});
+  if(t.time){const h=parseInt(t.time)+'h';if(!aiMem.time[h])aiMem.time[h]={w:0,t:0};aiMem.time[h].t++;if(t.win)aiMem.time[h].w++;}
+  // Corrélation psycho
+  if(t.psych){
+    const ps=getPsychScore(t.psych);
+    aiMem.psychCorr.push({score:ps,win:t.win,grade:t.grade,date:t.date});
+    if(aiMem.psychCorr.length>100)aiMem.psychCorr.shift();
+  }
+  genRules();
+}
+
+function rebuildMem(){
+  const vp=aiMem.visualPatterns||[];
+  const pc=aiMem.psychCorr||[];
+  aiMem={setup:{},sess:{},conf:{},sweep:{},bos:{},kz:{},extra:{},time:{},rules:[],visualPatterns:vp,psychCorr:pc,psych:aiMem.psych||{}};
+  trades.forEach(t=>updateMem(t));
+}
+
+function genRules(){
+  const rules=[];
+  Object.entries(aiMem.setup).filter(([,v])=>v.t>=3).forEach(([k,v])=>{
+    const wr=v.w/v.t*100;
+    if(wr>=70)rules.push({type:'best',text:`✓ ${k} → ${wr.toFixed(0)}% WR (${v.t}t)`});
+    if(wr<40)rules.push({type:'warn',text:`✗ ${k} → ${wr.toFixed(0)}% — à éviter`});
+  });
+  Object.entries(aiMem.bos).filter(([,v])=>v.t>=3).forEach(([k,v])=>{
+    const wr=v.w/v.t*100;
+    if(wr>=70)rules.push({type:'best',text:`✓ ${k} → ${wr.toFixed(0)}% WR signal fort`});
+  });
+  Object.entries(aiMem.kz).filter(([,v])=>v.t>=3).forEach(([k,v])=>{
+    const wr=v.w/v.t*100;
+    if(wr>=70)rules.push({type:'best',text:`✓ ${k} → ${wr.toFixed(0)}% WR optimal`});
+  });
+  // Règle psycho
+  const goodPsych=aiMem.psychCorr.filter(p=>p.score>=70);
+  const badPsych=aiMem.psychCorr.filter(p=>p.score<50);
+  if(goodPsych.length>=3){
+    const wr=goodPsych.filter(p=>p.win).length/goodPsych.length*100;
+    rules.push({type:'best',text:`✓ Score mental ≥70 → ${wr.toFixed(0)}% WR`});
+  }
+  if(badPsych.length>=3){
+    const wr=badPsych.filter(p=>p.win).length/badPsych.length*100;
+    rules.push({type:'warn',text:`✗ Score mental <50 → ${wr.toFixed(0)}% WR — stop`});
+  }
+  aiMem.rules=rules;
+}
+
+function renderMemPanel(){
+  const vp=aiMem.visualPatterns||[];
+  const pc=aiMem.psychCorr||[];
+  document.getElementById('mem-summary').innerHTML=`
+    <span style="color:var(--G)">${trades.length}</span> trades · <span style="color:var(--B)">${Object.keys(aiMem.setup).length}</span> setups · <span style="color:var(--P)">${Object.keys(aiMem.conf).length}</span> confluences<br>
+    <span style="color:var(--A)">${Object.keys(aiMem.bos).length}</span> BOS/CHoCH · <span style="color:var(--O)">${Object.keys(aiMem.kz).length}</span> kill zones<br>
+    <span style="color:var(--P)">${vp.length}</span> patterns visuels · <span style="color:var(--T)">${pc.length}</span> états psycho<br>
+    <span style="color:var(--C)">${aiMem.rules.length}</span> règles détectées`;
+  const bS=Object.entries(aiMem.setup).filter(([,v])=>v.t>=2).sort((a,b)=>b[1].w/b[1].t-a[1].w/a[1].t)[0];
+  const bK=Object.entries(aiMem.kz).filter(([,v])=>v.t>=2).sort((a,b)=>b[1].w/b[1].t-a[1].w/a[1].t)[0];
+  const bB=Object.entries(aiMem.bos).filter(([,v])=>v.t>=2).sort((a,b)=>b[1].w/b[1].t-a[1].w/a[1].t)[0];
+  let p='';
+  if(bS){const[k,v]=bS;p+=`<div class="ins" style="--ic:var(--G)"><div class="it">Best Setup</div><div class="ib">${k} · ${(v.w/v.t*100).toFixed(0)}% WR · ${v.t}t</div></div>`;}
+  if(bK){const[k,v]=bK;p+=`<div class="ins" style="--ic:var(--A)"><div class="it">Kill Zone Optimale</div><div class="ib">${k} → ${(v.w/v.t*100).toFixed(0)}%</div></div>`;}
+  if(bB){const[k,v]=bB;p+=`<div class="ins" style="--ic:var(--B)"><div class="it">Structure Clé</div><div class="ib">${k} → ${(v.w/v.t*100).toFixed(0)}%</div></div>`;}
+  document.getElementById('mem-patterns').innerHTML=p;
+  document.getElementById('mem-rules').innerHTML=aiMem.rules.map(r=>`<div style="padding:2px 0;border-bottom:1px solid var(--bd);color:${r.type==='best'?'var(--G)':'var(--R)'};font-size:8px">${r.text}</div>`).join('')||'<span style="color:var(--mu);font-size:8px">Insuffisant.</span>';
+}
+
+// ══════════════════════════════════════════════
+// CLOCK
+// ══════════════════════════════════════════════
+function getParis(){return new Date(new Date().toLocaleString('en-US',{timeZone:'Europe/Paris'}));}
+function getActiveSess(h,m){
+  const d=h+m/60;const a=[];
+  if(d>=1&&d<9)a.push('Asia');
+  if(d>=8&&d<17)a.push('London');
+  if(d>=14&&d<23)a.push('NY');
+  if(d>=14&&d<17)a.push('Overlap');
+  return a.length?a:['Hors session'];
+}
+function updateClock(){
+  const p=getParis();
+  const hh=String(p.getHours()).padStart(2,'0'),mm=String(p.getMinutes()).padStart(2,'0'),ss=String(p.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent=hh+':'+mm+':'+ss;
+  const days=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],months=['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  document.getElementById('clk-date').textContent=days[p.getDay()]+' '+p.getDate()+' '+months[p.getMonth()]+' '+p.getFullYear();
+  const dec=p.getHours()+p.getMinutes()/60;
+  const ss2=[{n:'ASIA',s:1,e:9},{n:'LON',s:8,e:17},{n:'NY',s:14,e:23},{n:'OVL',s:14,e:17}];
+  document.getElementById('smini').innerHTML=ss2.map(s=>{
+    const a=dec>=s.s&&dec<s.e,soon=!a&&(s.s-dec)*60<120&&s.s>dec;
+    return`<div class="sm ${a?'on':soon?'soon':''}">${s.n}${a?' ●':soon?' ⟳':''}</div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+// STATS & RENDER
+// ══════════════════════════════════════════════
+function calcStats(arr){
+  if(!arr.length)return{wr:0,avgR:0,totalPnl:0,totalTrades:0,wins:0,losses:0,expectancy:0};
+  const w=arr.filter(t=>t.win),l=arr.filter(t=>!t.win);
+  const wr=w.length/arr.length*100;
+  const aRW=w.length?w.reduce((s,t)=>s+t.r,0)/w.length:0;
+  const aRL=l.length?Math.abs(l.reduce((s,t)=>s+t.r,0)/l.length):1;
+  return{wr,avgR:arr.reduce((s,t)=>s+t.r,0)/arr.length,totalPnl:arr.reduce((s,t)=>s+t.pnl,0),totalTrades:arr.length,wins:w.length,losses:l.length,expectancy:(wr/100)*aRW-(1-wr/100)*aRL};
+}
+
+function renderAll(){renderKPI();renderCharts();renderInsights();refreshRadar();}
+
+function renderKPI(){
+  const s=calcStats(trades);
+  const gA=calcStats(trades.filter(t=>t.grade==='A'));
+  const psychTrades=trades.filter(t=>t.psych);
+  const avgPsychWin=psychTrades.filter(t=>t.win).length?Math.round(psychTrades.filter(t=>t.win).reduce((a,t)=>a+getPsychScore(t.psych),0)/psychTrades.filter(t=>t.win).length):0;
+  document.getElementById('krow').innerHTML=[
+    {l:'WIN RATE',v:s.wr.toFixed(0)+'%',s:s.wins+'W/'+s.losses+'L',c:s.wr>=50?'var(--G)':'var(--R)'},
+    {l:'EXPECTANCY',v:(s.expectancy>0?'+':'')+s.expectancy.toFixed(2)+'R',s:'par trade',c:s.expectancy>0?'var(--G)':'var(--R)'},
+    {l:'P&L TOTAL',v:(s.totalPnl>=0?'+':'')+s.totalPnl.toFixed(0)+'$',s:s.totalTrades+'t',c:s.totalPnl>=0?'var(--G)':'var(--R)'},
+    {l:'GRADE A WR',v:gA.wr.toFixed(0)+'%',s:gA.totalTrades+'t grade A',c:'var(--C)'},
+    {l:'MENTAL WIN',v:avgPsychWin||'–',s:'score mental moy gains',c:'var(--P)'}
+  ].map(k=>`<div class="kpi" style="--kc:${k.c}"><div class="kl">${k.l}</div><div class="kv">${k.v}</div><div class="ks">${k.s}</div></div>`).join('');
+}
+
+function renderCharts(){
+  const z=document.getElementById('charts');
+  if(!trades.length){z.innerHTML='<div class="pan pf"><div class="nd">Aucun trade journalisé.</div></div>';return;}
+  z.innerHTML=`
+    <div class="pan"><div class="pt">WR PAR SETUP</div><div id="b-setup"></div></div>
+    <div class="pan"><div class="pt">WR PAR BOS/CHOCH</div><div id="b-bos"></div></div>
+    <div class="pan"><div class="pt">WR PAR KILL ZONE</div><div id="b-kz"></div></div>
+    <div class="pan"><div class="pt">CONFLUENCES CLÉ</div><div id="b-conf"></div></div>
+    <div class="pan"><div class="pt">WR PAR SESSION</div><div id="b-sess"></div></div>
+    <div class="pan"><div class="pt">CONDITIONS EXTRA</div><div id="b-extra"></div></div>
+    <div class="pan pf"><div class="pt">COURBE P&L</div><div class="cw"><canvas id="pnl-c"></canvas></div></div>`;
+  rBars('b-setup','setup');rBars('b-sess','session');
+  rMultiBars('b-bos',aiMem.bos);rMultiBars('b-kz',aiMem.kz);
+  rMultiBars('b-conf',aiMem.conf);rMultiBars('b-extra',aiMem.extra);
+  rPnl();
+}
+
+function rBars(id,key){
+  const g={};trades.forEach(t=>{const k=t[key]||'?';if(!g[k])g[k]={w:0,t:0};g[k].t++;if(t.win)g[k].w++;});
+  const el=document.getElementById(id);if(!el)return;
+  el.innerHTML=Object.entries(g).sort((a,b)=>b[1].w/b[1].t-a[1].w/a[1].t).map(([k,v])=>{
+    const p=v.w/v.t*100,c=p>=65?'var(--G)':p>=45?'var(--A)':'var(--R)';
+    return`<div class="br"><div class="bl">${k}</div><div class="btr"><div class="bfill" style="width:${p}%;background:${c}"></div></div><div class="bp" style="color:${c}">${p.toFixed(0)}%</div><div class="bn">${v.t}t</div></div>`;
+  }).join('')||'<div class="nd" style="padding:6px">–</div>';
+}
+
+function rMultiBars(id,obj){
+  const el=document.getElementById(id);if(!el)return;
+  const sorted=Object.entries(obj||{}).filter(([,v])=>v.t>=1).sort((a,b)=>b[1].w/b[1].t-a[1].w/a[1].t).slice(0,6);
+  el.innerHTML=sorted.map(([k,v])=>{
+    const p=v.w/v.t*100,c=p>=65?'var(--G)':p>=45?'var(--A)':'var(--R)';
+    return`<div class="br"><div class="bl">${k}</div><div class="btr"><div class="bfill" style="width:${p}%;background:${c}"></div></div><div class="bp" style="color:${c}">${p.toFixed(0)}%</div><div class="bn">${v.t}t</div></div>`;
+  }).join('')||'<div class="nd" style="padding:6px">–</div>';
+}
+
+function rPnl(){
+  const ctx=document.getElementById('pnl-c');if(!ctx)return;
+  if(charts.pnl)charts.pnl.destroy();
+  const s=[...trades].sort((a,b)=>a.date.localeCompare(b.date));
+  let c=0;const data=s.map(t=>{c+=t.pnl;return c;});
+  const col=c>=0?'#00f0a0':'#ff2244';
+  charts.pnl=new Chart(ctx,{type:'line',data:{labels:s.map((_,i)=>'T'+(i+1)),datasets:[{data,borderColor:col,backgroundColor:col+'12',fill:true,tension:.35,pointRadius:2,pointBackgroundColor:s.map(t=>t.win?'#00f0a0':'#ff2244'),borderWidth:2}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:'#3d5878',font:{size:7,family:'JetBrains Mono'}},grid:{color:'#162030'}},
+        y:{ticks:{color:'#3d5878',font:{size:7,family:'JetBrains Mono'},callback:v=>v+'$'},grid:{color:'#162030'}}}}});
+}
+
+function barLine(label,pct,color,valText){
+  return`<div class="br"><div class="bl">${label}</div><div class="btr"><div class="bfill" style="width:${Math.min(100,Math.max(0,pct))}%;background:${color}"></div></div><div class="bp" style="color:${color}">${valText}</div></div>`;
+}
+
+function renderInsights(){
+  const z=document.getElementById('ai-ins');
+  if(!trades.length){z.innerHTML='';return;}
+  const ins=[];
+  const gA=calcStats(trades.filter(t=>t.grade==='A'));
+  const gC=calcStats(trades.filter(t=>t.grade==='C'));
+  if(gA.totalTrades>=2&&gC.totalTrades>=2&&gA.wr-gC.wr>15)
+    ins.push({c:'var(--G)',t:'Grade A vs C',b:`${gA.wr.toFixed(0)}% vs ${gC.wr.toFixed(0)}% — l'exécution fait tout.`});
+  const bS=Object.entries(aiMem.setup||{}).filter(([,v])=>v.t>=2).sort((a,b)=>b[1].w/b[1].t-a[1].w/a[1].t)[0];
+  if(bS){const[k,v]=bS;ins.push({c:'var(--B)',t:'Best: '+k,b:(v.w/v.t*100).toFixed(0)+'% WR · '+v.t+'t'});}
+  const pc=aiMem.psychCorr||[];
+  const goodPsych=pc.filter(p=>p.score>=70);
+  if(goodPsych.length>=3){
+    const wr=goodPsych.filter(p=>p.win).length/goodPsych.length*100;
+    ins.push({c:'var(--P)',t:'Mental ≥70 → '+wr.toFixed(0)+'% WR',b:'Ton état mental influence directement tes résultats.'});
+  }
+  if(!ins.length){z.innerHTML='';return;}
+  z.innerHTML=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px">${ins.map(i=>`<div class="ins" style="--ic:${i.c}"><div class="it">${i.t}</div><div class="ib">${i.b}</div></div>`).join('')}</div>`;
+}
+
+// ══════════════════════════════════════════════
+// RADAR
+// ══════════════════════════════════════════════
+function refreshRadar(){renderSignal();renderCombos();updateDXY();}
+
+function updateDXY(){
+  // Indicateur DXY simulé (en production: appel TradingView ou API)
+  const badge=document.getElementById('dxy-badge');
+  if(badge)badge.textContent='DXY: –';
+}
+
+function renderSignal(){
+  const p=getParis();const h=p.getHours(),m=p.getMinutes();
+  const active=getActiveSess(h,m);
+  const st=trades.filter(t=>active.some(a=>a===t.session));
+  const s=calcStats(st);
+  const ovl=h>=14&&h<17;
+  // Bonus psycho
+  const pc=aiMem.psychCorr||[];
+  const recentPsych=pc.slice(-5);
+  const avgRecent=recentPsych.length?recentPsych.reduce((a,p)=>a+p.score,0)/recentPsych.length:50;
+  const psychBonus=avgRecent>=70?'+psych':avgRecent<50?'-psych':'';
+  let sc,lbl,adv;
+  const newsBlocked=isNewsBlocked&&isNewsBlocked();
+  if(newsBlocked){sc=5;lbl='⚡ NEWS ROUGE';adv='Trading bloqué — news rouge active.';}
+  else if(active[0]==='Hors session'){sc=15;lbl='HORS SESSION';adv='Pas de setup actif.';}
+  else if(s.totalTrades<3){sc=40;lbl='DONNÉES INSUFFISANTES';adv='Continue à journaliser.';}
+  else if(s.wr>=65&&s.expectancy>0.5){sc=ovl?95:80;lbl=ovl?'OVERLAP · MAX':'SIGNAL FORT';adv='Grade A uniquement.';}
+  else if(s.wr>=50){sc=55;lbl='SIGNAL MODÉRÉ';adv='Sélectif — confluence parfaite.';}
+  else{sc=28;lbl='SIGNAL FAIBLE';adv='Mauvaises stats cette session.';}
+  if(psychBonus==='+psych')sc=Math.min(99,sc+8);
+  if(psychBonus==='-psych')sc=Math.max(10,sc-15);
+  const col=sc>=70?'var(--G)':sc>=45?'var(--A)':'var(--R)';
+  document.getElementById('global-signal').innerHTML=`
+    <div class="sc" style="--sv:${col}">
+      <div class="srng"><div class="sn">${sc}</div></div>
+      <div class="si">
+        <div class="sl2">${active.join('/')}${psychBonus?' · '+psychBonus:''}</div>
+        <div class="st">${lbl}</div>
+        <div class="sa">${adv}</div>
+      </div>
+    </div>`;
+}
+
+function buildCombos(){
+  const p=getParis();const active=getActiveSess(p.getHours(),p.getMinutes());
+  const map={};
+  trades.forEach(t=>{const k=t.setup+'|'+t.session+'|'+t.direction;
+    if(!map[k])map[k]={setup:t.setup,session:t.session,direction:t.direction,trades:[]};
+    map[k].trades.push(t);});
+  return Object.values(map).filter(c=>c.trades.length>=2).map(c=>{
+    const s=calcStats(c.trades);
+    const isNow=active.some(a=>a===c.session);
+    const tC=Object.entries(aiMem.conf||{}).filter(([,v])=>v.t>=2).sort((a,b)=>b[1].w/b[1].t-a[1].w/a[1].t).slice(0,2).map(([k])=>k);
+    let sc=s.wr*.5+Math.max(0,s.expectancy)*20+c.trades.length*2;
+    if(isNow)sc+=30;
+    return{...c,stats:s,isNow,tC,score:Math.min(99,Math.round(sc))};
+  }).sort((a,b)=>(b.isNow-a.isNow)||b.score-a.score);
+}
+
+function renderCombos(){
+  const combos=buildCombos();window._combos=combos;
+  const el=document.getElementById('combos-list');
+  if(!combos.length){el.innerHTML='<div class="nd" style="padding:8px;font-size:8px">Min 2 trades/catégorie.</div>';return;}
+  const cols=['var(--G)','var(--C)','var(--A)','var(--B)','var(--P)'];
+  el.innerHTML=combos.slice(0,5).map((c,i)=>{
+    const col=c.isNow?cols[0]:cols[Math.min(i,cols.length-1)];
+    const dc=c.direction==='LONG'?'var(--G)':'var(--R)';
+    return`<div class="combo" style="--cc:${col}" onclick="selCombo(${i})">
+      <div class="ch"><div class="crk">#${i+1}${c.isNow?' NOW':''}</div>
+        <div class="cnm">${c.setup}·<span style="color:${dc}">${c.direction}</span></div>
+        <div class="cwr">${c.stats.wr.toFixed(0)}%</div></div>
+      <div class="ctgs2"><span class="ctg co">${c.session}</span>${c.tC.map(x=>`<span class="ctg cc">${x}</span>`).join('')}</div>
+      <div class="cst"><span>E:${c.stats.expectancy.toFixed(2)}R</span><span>${c.trades.length}t</span></div>
+      <div class="cprog"><div class="cpf" style="width:${c.score}%;background:${col}"></div></div>
+      <div class="cdet" id="cd-${i}">Analyse...</div>
+    </div>`;
+  }).join('');
+}
+
+function selCombo(i){
+  const c=window._combos[i];const d=document.getElementById('cd-'+i);
+  if(d.classList.contains('on')){d.classList.remove('on');return;}
+  document.querySelectorAll('.cdet').forEach(x=>x.classList.remove('on'));
+  d.classList.add('on');d.textContent='Analyse NEXUS...';
+  if(!apiKey){d.textContent='Clé API requise.';return;}
+  callNexus(`Combo: ${c.setup}·${c.session}·${c.direction} WR:${c.stats.wr.toFixed(0)}% ${c.trades.length}t. Conditions chart + step-by-step entrée ICT. Court.`,300).then(t=>d.textContent=t).catch(e=>d.textContent='Erreur.');
+}
+
+// ══════════════════════════════════════════════
+// AI ENGINE
+// ══════════════════════════════════════════════
+const SYS=`Tu es NEXUS v6, expert IA ICT/SMC avec Vision AI et Psychology Tracker intégrés. Tu analyses: journal de trading, patterns visuels, état psychologique, corrélations complexes.
+
+Concepts: BOS, CHoCH, MSS, BPR, IFVG, FVG MTF, OB, Breaker, EQH/EQL, Sweep, Kill Zones, AMD, Judas Swing, OTE, DXY corrélation, Asia Range, Displacement
+
+Tu prends en compte l'état mental du trader dans toutes tes analyses. Réponses directes, actionnables. Français.`;
+
+function buildCtx(){
+  const p=getParis();
+  const h=String(p.getHours()).padStart(2,'0')+':'+String(p.getMinutes()).padStart(2,'0');
+  const active=getActiveSess(p.getHours(),p.getMinutes());
+  const s=calcStats(trades);
+  const ss=Object.entries(aiMem.setup||{}).map(([k,v])=>`${k}:${(v.w/v.t*100).toFixed(0)}%/${v.t}t`).join(',');
+  const ks=Object.entries(aiMem.kz||{}).map(([k,v])=>`${k}:${(v.w/v.t*100).toFixed(0)}%`).join(',');
+  const rs=(aiMem.rules||[]).map(r=>r.text).join('|');
+  const vp=aiMem.visualPatterns||[];
+  const pc=aiMem.psychCorr||[];
+  const avgPsych=pc.length?Math.round(pc.reduce((a,p)=>a+p.score,0)/pc.length):0;
+  const rec=trades.slice(-5).map(t=>`[${t.date} ${t.setup} ${t.direction} ${t.session} ${t.win?'+':''}${t.r}R G${t.grade}]`).join(' ');
+  return`HEURE:${h} SESSIONS:${active.join('/')} | STATS:${s.totalTrades}t WR:${s.wr.toFixed(0)}% EXP:${s.expectancy.toFixed(2)}R PnL:${s.totalPnl}$ | SETUPS:${ss} | KZ:${ks} | RÈGLES:${rs} | VISION:${vp.length}captures | PSYCH_AVG:${avgPsych}/100 | RÉCENTS:${rec}`;
+}
+
+async function callNexus(msg,max=600){
+  if(!apiKey)throw new Error('no-key');
+  const r=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:max,
+      system:SYS+'\n\nCONTEXTE LIVE:\n'+buildCtx(),
+      messages:[{role:'user',content:msg}]})
+  });
+  if(!r.ok){const e=await r.json();throw new Error(e.error?.message||r.status);}
+  const d=await r.json();
+  return d.content?.map(x=>x.text||'').join('')||'Erreur.';
+}
+
+async function autoFeedback(t){
+  try{
+    const ps=getPsychScore(t.psych||{});
+    const txt=await callNexus(`Trade: ${t.setup} ${t.direction} ${t.session} ${t.win?'+':''}${t.r}R G${t.grade} BOS:${(t.bos||[]).join(',')} KZ:${(t.kz||[]).join(',')} PsychScore:${ps}. Feedback 2 phrases: qualité + point psycho si pertinent.`,150);
+    addMsg('sys','✓ '+txt);
+  }catch(e){}
+}
+
+async function sendMsg(){
+  const inp=document.getElementById('ai-inp');const msg=inp.value.trim();if(!msg)return;
+  inp.value='';addMsg('user',msg);const t=addMsg('ai','...');
+  try{const txt=await callNexus(msg,700);t.textContent=txt;}
+  catch(e){t.textContent=e.message==='no-key'?'Clé API requise.':'Erreur: '+e.message;}
+}
+
+async function ask(q){
+  addMsg('user',q);const t=addMsg('ai','...');
+  try{const txt=await callNexus(q,700);t.textContent=txt;}
+  catch(e){t.textContent=e.message==='no-key'?'Clé API requise.':'Erreur.';}
+}
+
+async function runScan(){
+  if(!apiKey){addMsg('sys','Clé API requise.');return;}
+  const p=getPsychData();const ps=getPsychScore(p);
+  const t=addMsg('sys','Scan...');
+  try{
+    const txt=await callNexus(`SCAN TEMPS RÉEL. Mon état mental actuel: score ${ps}/100 (conf:${p.confiance} stress:${p.stress} focus:${p.focus}). FOMO:${p.fomo} Plan:${p.plan}. Selon heure/sessions et mon historique: dois-je trader ? Si oui: setup + conditions minimum + logique entrée M1.`,600);
+    t.textContent=txt;
+  }catch(e){t.textContent='Erreur: '+e.message;}
+}
+
+async function deepLearn(){
+  if(!apiKey){addMsg('sys','Clé API requise.');return;}
+  const t=addMsg('sys','Analyse profonde...');
+  try{
+    const txt=await callNexus('Analyse complète: 1) Edge principal avec conditions exactes 2) Leakage principal 3) Profil psychologique et impact sur résultats 4) 5 règles concrètes personnalisées 5) Fenêtre optimale temps+session+mental.',900);
+    t.textContent=txt;renderMemPanel();
+  }catch(e){t.textContent='Erreur: '+e.message;}
+}
+
+function addMsg(role,text){
+  const el=document.createElement('div');el.className='msg '+role;el.textContent=text;
+  const msgs=document.getElementById('chat-msgs');msgs.appendChild(el);msgs.scrollTop=msgs.scrollHeight;
+  return el;
+}
+
+// ══════════════════════════════════════════════
+// TELEGRAM
+// ══════════════════════════════════════════════
+async function sendTg(data){
+  if(!tgToken||!tgChat)return;
+  try{await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:tgChat,text:data})});}catch(e){}
+}
+function saveTg(){
+  tgToken=document.getElementById('cfg-tg-token').value.trim();
+  tgChat=document.getElementById('cfg-tg-chat').value.trim();
+  localStorage.setItem(TGK,JSON.stringify({token:tgToken,chat:tgChat}));
+}
+async function testTg(){
+  if(!tgToken||!tgChat){alert('Token et Chat ID requis');return;}
+  try{
+    const r=await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:tgChat,text:'⬡ NEXUS v6 — Vision AI + Psychology Tracker actifs ✓'})});
+    const d=await r.json();addMsg('sys',d.ok?'✓ Telegram OK':'Erreur: '+JSON.stringify(d));
+  }catch(e){addMsg('sys','Erreur réseau.');}
+}
+
+// ══════════════════════════════════════════════
+// ANALYSE & HISTORIQUE
+// ══════════════════════════════════════════════
+function renderAnalyse(){
+  const fs=document.getElementById('fa-setup').value;
+  const fse=document.getElementById('fa-sess').value;
+  const fd=document.getElementById('fa-dir').value;
+  const fg=document.getElementById('fa-grade').value;
+  let ft=trades.filter(t=>(!fs||t.setup===fs)&&(!fse||t.session===fse)&&(!fd||t.direction===fd)&&(!fg||t.grade===fg));
+  const z=document.getElementById('analyse-content');
+  if(!ft.length){z.innerHTML='<div class="nd">Aucun trade.</div>';return;}
+  const s=calcStats(ft);
+  const gA=calcStats(ft.filter(t=>t.grade==='A'));
+  const gC=calcStats(ft.filter(t=>t.grade==='C'));
+  const bosG={};ft.forEach(t=>(t.bos||[]).forEach(b=>{if(!bosG[b])bosG[b]={w:0,t:0};bosG[b].t++;if(t.win)bosG[b].w++;}));
+  const kzG={};ft.forEach(t=>(t.kz||[]).forEach(k=>{if(!kzG[k])kzG[k]={w:0,t:0};kzG[k].t++;if(t.win)kzG[k].w++;}));
+  z.innerHTML=`<div class="p2" style="margin-bottom:7px">
+    <div class="pan"><div class="pt">Stats (${ft.length}t)</div>
+      ${barLine('Win Rate',s.wr,s.wr>=50?'var(--G)':'var(--R)',s.wr.toFixed(0)+'%')}
+      ${barLine('Expectancy',Math.max(0,s.expectancy)*40,s.expectancy>0?'var(--G)':'var(--R)',(s.expectancy>0?'+':'')+s.expectancy.toFixed(2)+'R')}
+    </div>
+    <div class="pan"><div class="pt">Grade A vs C</div>
+      ${gA.totalTrades?barLine('Grade A',gA.wr,'var(--G)',gA.wr.toFixed(0)+'% ('+gA.totalTrades+'t)'):''}
+      ${gC.totalTrades?barLine('Grade C',gC.wr,'var(--A)',gC.wr.toFixed(0)+'% ('+gC.totalTrades+'t)'):''}
+    </div>
+    <div class="pan"><div class="pt">BOS / CHoCH</div>${Object.entries(bosG).sort((a,b)=>b[1].w/b[1].t-a[1].w/a[1].t).map(([k,v])=>{const p=v.w/v.t*100,c=p>=65?'var(--G)':p>=45?'var(--A)':'var(--R)';return barLine(k,p,c,p.toFixed(0)+'%');}).join('')||'<div class="nd" style="padding:4px">–</div>'}</div>
+    <div class="pan"><div class="pt">Kill Zones</div>${Object.entries(kzG).sort((a,b)=>b[1].w/b[1].t-a[1].w/a[1].t).map(([k,v])=>{const p=v.w/v.t*100,c=p>=65?'var(--G)':p>=45?'var(--A)':'var(--R)';return barLine(k,p,c,p.toFixed(0)+'%');}).join('')||'<div class="nd" style="padding:4px">–</div>'}</div>
+  </div>`;
+}
+
+function renderHistorique(){
+  const fg=document.getElementById('fh-grade').value;
+  const fr=document.getElementById('fh-res').value;
+  const fs=document.getElementById('fh-setup').value;
+  let ft=[...trades].filter(t=>(!fg||t.grade===fg)&&(!fr||(fr==='WIN'?t.win:!t.win))&&(!fs||t.setup===fs)).reverse();
+  const z=document.getElementById('historique-content');
+  if(!ft.length){z.innerHTML='<div class="nd">Aucun trade.</div>';return;}
+  z.innerHTML=`<div class="tw"><table>
+    <thead><tr><th>Date</th><th>TF</th><th>Setup</th><th>Structure</th><th>Sweep</th><th>KZ</th><th>Dir</th><th>Sess</th><th>G</th><th>Res</th><th>R</th><th>P&L</th><th>Psycho</th><th>Erreur</th><th></th></tr></thead>
+    <tbody>${ft.map(t=>{
+      const ps=t.psych?getPsychScore(t.psych):null;
+      const psc=ps>=70?'var(--G)':ps>=50?'var(--A)':'var(--R)';
+      return`<tr>
+        <td>${t.date} ${t.time||''}</td>
+        <td><span class="ctg ct">${t.tf||'–'}</span></td>
+        <td>${t.setup}</td>
+        <td>${(t.bos||[]).map(b=>`<span class="ctg co">${b}</span>`).join(' ')||'–'}</td>
+        <td>${(t.sweep||[]).map(s=>`<span class="ctg cs">${s}</span>`).join(' ')||'–'}</td>
+        <td>${(t.kz||[]).map(k=>`<span class="ctg" style="background:rgba(255,183,0,.08);border:1px solid rgba(255,183,0,.2);color:var(--A)">${k}</span>`).join(' ')||'–'}</td>
+        <td style="color:${t.direction==='LONG'?'var(--G)':'var(--R)'}">${t.direction}</td>
+        <td>${t.session}</td>
+        <td><span class="bdg b${t.grade.toLowerCase()}">${t.grade}</span></td>
+        <td><span class="bdg ${t.win?'bw':'bl2'}">${t.win?'WIN':'LOSS'}</span></td>
+        <td class="${t.r>0?'pos':'neg'}">${t.r>0?'+':''}${t.r.toFixed(2)}R</td>
+        <td class="${t.pnl>=0?'pos':'neg'}">${t.pnl>=0?'+':''}${t.pnl.toFixed(0)}$</td>
+        <td style="color:${psc};font-family:var(--FM);font-size:8px">${ps!==null?ps+'/100':'–'}</td>
+        <td style="font-size:7px;color:var(--mu)">${t.error==='Aucune – Exécution parfaite'?'—':t.error.substring(0,16)}</td>
+        <td><button class="db" onclick="deleteTrade(${t.id})">✕</button></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>`;
+}
+
+function renderVisionLog(){
+  const z=document.getElementById('vision-log-content');
+  if(!visionLog.length){z.innerHTML='<div class="nd">Aucune capture analysée.</div>';return;}
+  z.innerHTML=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${
+    [...visionLog].reverse().slice(0,12).map(v=>{
+      const gc={'A':'var(--G)','B':'var(--B)','C':'var(--A)'}[v.grade]||'var(--mu)';
+      return`<div style="background:var(--bg2);border:1px solid var(--bd);border-radius:4px;padding:8px;border-top:2px solid ${gc}">
+        <div style="font-family:var(--FM);font-size:7px;color:${gc};margin-bottom:3px">GRADE ${v.grade} · ${v.tf} · ${v.moment==='pre'?'PRÉ':'POST'}</div>
+        <div style="font-family:var(--FM);font-size:7px;color:var(--mu);margin-bottom:5px">${v.date.split('T')[0]}</div>
+        <div style="font-family:var(--FB);font-size:8px;color:var(--tx);line-height:1.6">${v.analysis.substring(0,180)}...</div>
+      </div>`;
+    }).join('')
+  }</div>`;
+}
+
+// ══════════════════════════════════════════════
+// NAV & UTILS
+// ══════════════════════════════════════════════
+function sTab(btn,id){
+  document.querySelectorAll('.stab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.spanel').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');document.getElementById('sp-'+id).classList.add('on');
+}
+function mTab(btn,id){
+  document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.mbody > div').forEach(v=>v.style.display='none');
+  btn.classList.add('on');document.getElementById('v-'+id).style.display='block';
+  if(id==='analyse')renderAnalyse();
+  if(id==='historique')renderHistorique();
+  if(id==='vision')renderVisionLog();
+  if(id==='psycho')renderPsychoDashboard();
+}
+function updateFilters(){
+  const setups=[...new Set(trades.map(t=>t.setup))];
+  const sessions=[...new Set(trades.map(t=>t.session))];
+  ['fa-setup','fh-setup'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const prev=el.value;
+    el.innerHTML='<option value="">Tous setups</option>'+setups.map(s=>`<option ${s===prev?'selected':''}>${s}</option>`).join('');
+  });
+  const fse=document.getElementById('fa-sess');if(fse){
+    const prev=fse.value;
+    fse.innerHTML='<option value="">Toutes sessions</option>'+sessions.map(s=>`<option ${s===prev?'selected':''}>${s}</option>`).join('');
+  }
+}
+function saveKey(){
+  const k=document.getElementById('key-inp').value.trim();
+  if(k&&!k.startsWith('sk-ant')){alert('Clé invalide');return;}
+  if(k){apiKey=k;localStorage.setItem(AK,k);}
+  const on=document.getElementById('tg-on').checked;
+  if(on){
+    tgToken=document.getElementById('tg-token').value.trim();
+    tgChat=document.getElementById('tg-chat').value.trim();
+    localStorage.setItem(TGK,JSON.stringify({token:tgToken,chat:tgChat}));
+  }
+  hideOverlay();
+  if(apiKey){
+    document.getElementById('ai-status').textContent='NEXUS v6 Vision+Psych+DXY · actif';
+    addMsg('sys','NEXUS v6 activé. Vision AI · Psychology Tracker · DXY · News Filter opérationnels.');
+    setTimeout(deepLearn,1200);
+  }
+}
+function skipKey(){hideOverlay();}
+function hideOverlay(){document.getElementById('overlay').style.display='none';}
+function updateKey(){
+  const k=document.getElementById('cfg-key').value.trim();
+  if(!k.startsWith('sk-ant')){alert('Clé invalide');return;}
+  apiKey=k;localStorage.setItem(AK,k);addMsg('sys','Clé mise à jour.');
+}
+function exportJSON(){
+  const blob=new Blob([JSON.stringify({trades,aiMem,visionLog},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='nexus_v6_'+new Date().toISOString().split('T')[0]+'.json';a.click();
+}
+function importJSON(){
+  const file=document.getElementById('import-file').files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const d=JSON.parse(e.target.result);
+      if(d.trades){trades=d.trades;if(d.aiMem)aiMem={...aiMem,...d.aiMem};if(d.visionLog)visionLog=d.visionLog;
+        saveAll();renderAll();updateFilters();renderMemPanel();
+        addMsg('sys','✓ Import '+trades.length+' trades.');}
+    }catch(ex){alert('JSON invalide');}
+  };r.readAsText(file);
+}
+function clearAll(){trades=[];rebuildMem();visionLog=[];saveAll();renderAll();updateFilters();renderMemPanel();}
+
+init();
+
+// ══════════════════════════════════════════════
+// PWA — Service Worker Registration
+// ══════════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(reg => {
+        console.log('NEXUS SW enregistré:', reg.scope);
+      })
+      .catch(err => {
+        console.log('SW non disponible (mode local):', err.message);
+      });
+  });
+}
+
+// Bouton d'installation PWA
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Afficher bouton install
+  const installBtn = document.getElementById('install-btn');
+  if (installBtn) installBtn.style.display = 'flex';
+});
+
+window.addEventListener('appinstalled', () => {
+  console.log('NEXUS installé comme PWA');
+  deferredPrompt = null;
+  const installBtn = document.getElementById('install-btn');
+  if (installBtn) installBtn.style.display = 'none';
+});
+
+function installPWA() {
+  if (!deferredPrompt) {
+    alert('Pour installer NEXUS:\n\nAndroid: Menu Brave → "Ajouter à l\'écran d\'accueil"\niPhone: Partager → "Sur l\'écran d\'accueil"\nPC: Icône ⊕ dans la barre d\'adresse');
+    return;
+  }
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(result => {
+    if (result.outcome === 'accepted') {
+      addMsg('sys', '✓ NEXUS installé sur ton appareil !');
+    }
+    deferredPrompt = null;
+  });
+}
+</script>
+</body>
+</html>
