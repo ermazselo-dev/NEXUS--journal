@@ -1207,27 +1207,27 @@ function saveAll(){
 }
 
 function loadDemo(){
-  const ps=()=>({confiance:4,stress:2,focus:4,energie:4,patience:3,discipline:4,calme:4,hesitation:2,satisfaction:4,regrets:1,fomo:'non',plan:'oui',doutes:'non',revenge:'non',overtrade:'non',notes:''});
-  const psB=()=>({confiance:2,stress:4,focus:2,energie:3,patience:2,discipline:2,calme:2,hesitation:4,satisfaction:2,regrets:4,fomo:'oui',plan:'non',doutes:'oui',revenge:'non',overtrade:'non',notes:''});
+  const ps=()=>({confiance:4,stress:2,focus:4,energie:4,patience:3,discipline:4,calme:4,hesitation:2,satisfaction:4,regrets:1,fomo:'non',plan:'oui',doutes:'non',revenge:'non',overtrade:'non',notes:'État mental optimal'});
+  const psB=()=>({confiance:2,stress:4,focus:2,energie:3,patience:2,discipline:2,calme:2,hesitation:4,satisfaction:2,regrets:4,fomo:'oui',plan:'non',doutes:'oui',revenge:'non',overtrade:'oui',notes:'FOMO présent, pas suivi le plan'});
   trades=[
-    {id:1,date:'2026-04-01',time:'09:15',instrument:'EUR/USD',tf:'M1',setup:'BPR',confluences:['H1 FVG','HVN/POC','DXY corr.'],sweep:['Asia H'],bos:['CHoCH Bull'],kz:['London Open KZ'],extra:['Displacement fort','DXY inverse'],direction:'LONG',session:'London',htfH4:'Bullish',htfH1:'Bullish',r:2.5,pnl:1250,grade:'A',error:'Aucune – Exécution parfaite',why:'BPR H1 + CHoCH + DXY inversé',notes:'',win:true,psych:ps()},
-    {id:2,date:'2026-04-02',time:'10:30',instrument:'EUR/USD',tf:'M1',setup:'IFVG',confluences:['H4 FVG','H1 FVG','VWAP'],sweep:['PDH'],bos:['BOS Bull'],kz:['London Open KZ'],extra:['AMD Setup'],direction:'LONG',session:'London',htfH4:'Bullish',htfH1:'Bullish',r:3.0,pnl:1500,grade:'A',error:'Aucune – Exécution parfaite',why:'',notes:'',win:true,psych:ps()},
-    {id:3,date:'2026-04-03',time:'14:20',instrument:'EUR/USD',tf:'M5',setup:'FVG MTF',confluences:['M15 FVG'],sweep:['Open'],bos:[],kz:['NY Open KZ'],extra:[],direction:'SHORT',session:'NY',htfH4:'Bearish',htfH1:'Bearish',r:-1,pnl:-500,grade:'C',error:'FOMO (entrée trop tard)',why:'',notes:'',win:false,psych:psB()},
-    {id:4,date:'2026-04-07',time:'09:45',instrument:'EUR/USD',tf:'M1',setup:'BPR',confluences:['H1 FVG','EQH/EQL'],sweep:['EQH'],bos:['MSS Bear'],kz:['London Open KZ'],extra:['Judas Swing'],direction:'SHORT',session:'London',htfH4:'Bearish',htfH1:'Bearish',r:1.8,pnl:900,grade:'B',error:'Aucune – Exécution parfaite',why:'',notes:'',win:true,psych:ps()},
-    {id:5,date:'2026-04-08',time:'15:00',instrument:'EUR/USD',tf:'M1',setup:'OTE',confluences:['H4 FVG','HVN/POC','VWAP'],sweep:['PDL'],bos:['BOS Bull','CHoCH Bull'],kz:['NY Open KZ'],extra:['OTE 62%','Displacement fort','DXY inverse'],direction:'LONG',session:'NY',htfH4:'Bullish',htfH1:'Bullish',r:4.0,pnl:2000,grade:'A',error:'Aucune – Exécution parfaite',why:'',notes:'',win:true,psych:ps()},
-    {id:6,date:'2026-04-09',time:'09:00',instrument:'EUR/USD',tf:'M1',setup:'IFVG',confluences:['H1 FVG'],sweep:['Asia L'],bos:[],kz:['Frankfurt KZ'],extra:[],direction:'LONG',session:'Frankfurt',htfH4:'Bullish',htfH1:'Neutre',r:-1,pnl:-500,grade:'B',error:'Stop trop serré',why:'',notes:'',win:false,psych:{...ps(),stress:4,hesitation:4}},
-    {id:7,date:'2026-04-10',time:'14:45',instrument:'EUR/USD',tf:'M1',setup:'BPR',confluences:['H1 FVG','M5 FVG','EQH/EQL','DXY corr.'],sweep:['EQL'],bos:['CHoCH Bear'],kz:['NY Open KZ'],extra:['Displacement fort','DXY inverse'],direction:'SHORT',session:'NY',htfH4:'Bearish',htfH1:'Bearish',r:2.2,pnl:1100,grade:'A',error:'Aucune – Exécution parfaite',why:'',notes:'',win:true,psych:ps()},
-    {id:8,date:'2026-04-14',time:'10:10',instrument:'EUR/USD',tf:'M5',setup:'FVG MTF',confluences:['H4 FVG','M15 FVG'],sweep:['PWH'],bos:[],kz:['London Open KZ'],extra:[],direction:'LONG',session:'London',htfH4:'Bullish',htfH1:'Bullish',r:-1,pnl:-500,grade:'C',error:'FOMO (entrée trop tard)',why:'',notes:'',win:false,psych:psB()},
-    {id:9,date:'2026-04-15',time:'15:30',instrument:'EUR/USD',tf:'M1',setup:'BPR',confluences:['H1 FVG','HVN/POC'],sweep:['Open'],bos:['BOS Bear'],kz:['NY Open KZ'],extra:[],direction:'SHORT',session:'NY',htfH4:'Bearish',htfH1:'Bearish',r:1.5,pnl:750,grade:'B',error:'Aucune – Exécution parfaite',why:'',notes:'',win:true,psych:ps()},
-    {id:10,date:'2026-04-16',time:'09:30',instrument:'EUR/USD',tf:'M1',setup:'IFVG',confluences:['H4 FVG','H1 FVG','HVN/POC','VWAP','DXY corr.'],sweep:['Asia H'],bos:['CHoCH Bull','BOS Bull'],kz:['London Open KZ'],extra:['Displacement fort','AMD Setup','DXY inverse'],direction:'LONG',session:'London',htfH4:'Bullish',htfH1:'Bullish',r:3.5,pnl:1750,grade:'A',error:'Aucune – Exécution parfaite',why:'',notes:'',win:true,psych:ps()},
+    {id:1,date:'2026-04-01',time:'09:15',instrument:'EUR/USD',tf:'M1',setup:'BPR',confluences:['H1 FVG','HVN/POC','DXY corr.'],sweep:['Asia H'],bos:['CHoCH Bull'],kz:['London Open KZ'],extra:['Displacement fort','DXY inverse','Sweep & Close'],direction:'LONG',session:'London',htfH4:'Bullish',htfH1:'Bullish',r:2.5,pnl:1250,grade:'A',error:'Aucune – Exécution parfaite',why:'BPR H1 + CHoCH + sweep Asia H + S&C confirmé',notes:'Setup parfait Grade A',win:true,psych:ps()},
+    {id:2,date:'2026-04-02',time:'10:30',instrument:'EUR/USD',tf:'M1',setup:'IFVG',confluences:['H4 FVG','H1 FVG','VWAP'],sweep:['PDH'],bos:['BOS Bull'],kz:['London Open KZ'],extra:['AMD Setup','Vol. Inverse'],direction:'LONG',session:'London',htfH4:'Bullish',htfH1:'Bullish',r:3.0,pnl:1500,grade:'A',error:'Aucune – Exécution parfaite',why:'IFVG M5 + BOS + PDH sweep',notes:'Excellent timing London open',win:true,psych:ps()},
+    {id:3,date:'2026-04-03',time:'14:20',instrument:'EUR/USD',tf:'M5',setup:'FVG MTF',confluences:['M15 FVG'],sweep:['Open'],bos:[],kz:['NY Open KZ'],extra:[],direction:'SHORT',session:'NY',htfH4:'Bearish',htfH1:'Bearish',r:-1,pnl:-500,grade:'C',error:'FOMO (entrée trop tard)',why:'FVG sans confirmation structure',notes:'Entrée FOMO — pas de BOS confirmé',win:false,psych:psB()},
+    {id:4,date:'2026-04-07',time:'09:45',instrument:'EUR/USD',tf:'M1',setup:'BPR',confluences:['H1 FVG','EQH/EQL'],sweep:['EQH'],bos:['MSS Bear'],kz:['London Open KZ'],extra:['Judas Swing','Sweep & Close'],direction:'SHORT',session:'London',htfH4:'Bearish',htfH1:'Bearish',r:1.8,pnl:900,grade:'B',error:'Aucune – Exécution parfaite',why:'BPR + MSS + Judas Swing London',notes:'Bon trade, légère hésitation à l'entrée',win:true,psych:ps()},
+    {id:5,date:'2026-04-08',time:'15:00',instrument:'EUR/USD',tf:'M1',setup:'OTE',confluences:['H4 FVG','HVN/POC','VWAP'],sweep:['PDL'],bos:['BOS Bull','CHoCH Bull'],kz:['NY Open KZ'],extra:['OTE 62%','Displacement fort','S&C + Vol.Inverse'],direction:'LONG',session:'NY',htfH4:'Bullish',htfH1:'Bullish',r:4.0,pnl:2000,grade:'A',error:'Aucune – Exécution parfaite',why:'OTE 0.705 + displacement + S&C Vol inverse',notes:'Meilleur trade du mois',win:true,psych:ps()},
+    {id:6,date:'2026-04-09',time:'09:00',instrument:'EUR/USD',tf:'M1',setup:'IFVG',confluences:['H1 FVG'],sweep:['Asia L'],bos:[],kz:['Frankfurt KZ'],extra:[],direction:'LONG',session:'Frankfurt',htfH4:'Bullish',htfH1:'Neutre',r:-1,pnl:-500,grade:'B',error:'Stop trop serré',why:'IFVG Frankfurt sans confirmation H1',notes:'Stop trop serré — le setup était bon',win:false,psych:ps()},
+    {id:7,date:'2026-04-10',time:'14:45',instrument:'EUR/USD',tf:'M1',setup:'BPR',confluences:['H1 FVG','M5 FVG','EQH/EQL'],sweep:['EQL'],bos:['CHoCH Bear'],kz:['NY Open KZ'],extra:['Displacement fort','DIV SMT'],direction:'SHORT',session:'NY',htfH4:'Bearish',htfH1:'Bearish',r:2.2,pnl:1100,grade:'A',error:'Aucune – Exécution parfaite',why:'BPR + CHoCH + DIV SMT EUR/GBP divergence',notes:'DIV SMT confirmait la baisse',win:true,psych:ps()},
+    {id:8,date:'2026-04-14',time:'10:10',instrument:'EUR/USD',tf:'M5',setup:'FVG MTF',confluences:['H4 FVG','M15 FVG'],sweep:['PWH'],bos:[],kz:['London Open KZ'],extra:[],direction:'LONG',session:'London',htfH4:'Bullish',htfH1:'Bullish',r:-1,pnl:-500,grade:'C',error:'FOMO (entrée trop tard)',why:'FVG MTF sans structure LTF confirmée',notes:'Trop impatient — pas attendu le BOS M5',win:false,psych:psB()},
+    {id:9,date:'2026-04-15',time:'15:30',instrument:'EUR/USD',tf:'M1',setup:'BPR',confluences:['H1 FVG','HVN/POC'],sweep:['Open'],bos:['BOS Bear'],kz:['NY Open KZ'],extra:['OPR Break'],direction:'SHORT',session:'NY',htfH4:'Bearish',htfH1:'Bearish',r:1.5,pnl:750,grade:'B',error:'Aucune – Exécution parfaite',why:'BPR + OPR break + BOS Bear NY',notes:'OPR break solide',win:true,psych:ps()},
+    {id:10,date:'2026-04-16',time:'09:30',instrument:'EUR/USD',tf:'M1',setup:'IFVG',confluences:['H4 FVG','H1 FVG','HVN/POC','VWAP'],sweep:['Asia H'],bos:['CHoCH Bull','BOS Bull'],kz:['London Open KZ'],extra:['Displacement fort','AMD Setup','Sweep & Close'],direction:'LONG',session:'London',htfH4:'Bullish',htfH1:'Bullish',r:3.5,pnl:1750,grade:'A',error:'Aucune – Exécution parfaite',why:'IFVG + AMD + S&C + displacement London',notes:'Setup AMD classique parfaitement exécuté',win:true,psych:ps()},
+    {id:11,date:'2026-04-21',time:'09:20',instrument:'GBP/USD',tf:'M1',setup:'BPR après Sweep',confluences:['H1 FVG','M5 FVG'],sweep:['Asia H'],bos:['MSS Bear'],kz:['London Open KZ'],extra:['Sweep & Close','Vol. Inverse'],direction:'SHORT',session:'London',htfH4:'Bearish',htfH1:'Bearish',r:2.8,pnl:1400,grade:'A',error:'Aucune – Exécution parfaite',why:'BPR post-sweep + S&C Vol inverse GBP',notes:'Vol inverse très puissant sur ce setup',win:true,psych:ps()},
+    {id:12,date:'2026-04-22',time:'14:35',instrument:'EUR/USD',tf:'M1',setup:'OTE',confluences:['H4 FVG','VWAP'],sweep:['PDH'],bos:['CHoCH Bear'],kz:['NY Open KZ'],extra:['OTE 62%','Inducement'],direction:'SHORT',session:'NY',htfH4:'Bearish',htfH1:'Bearish',r:-1,pnl:-500,grade:'B',error:'Anticipation (entrée trop tôt)',why:'OTE sans attendre inducement résolu',notes:'L'inducement n'était pas encore sweepé',win:false,psych:ps()},
+    {id:13,date:'2026-04-23',time:'09:15',instrument:'EUR/USD',tf:'M1',setup:'BPR',confluences:['H1 FVG','H4 FVG','EQH/EQL'],sweep:['Asia L'],bos:['BOS Bull','CHoCH Bull'],kz:['London Open KZ'],extra:['Displacement fort','DIV SMT','Sweep & Close'],direction:'LONG',session:'London',htfH4:'Bullish',htfH1:'Bullish',r:3.2,pnl:1600,grade:'A',error:'Aucune – Exécution parfaite',why:'BPR + DIV SMT + displacement parfait',notes:'DIV SMT EUR/GBP + S&C Asia L',win:true,psych:ps()},
   ];
   trades.forEach(t=>updateMem(t));
   saveAll();
 }
 
-// ══════════════════════════════════════════════════
-// THEME
-// ══════════════════════════════════════════════════
 function toggleTheme(){
   isDark=!isDark;
   document.body.classList.toggle('light',!isDark);
@@ -2168,9 +2168,12 @@ async function analyzeImageInChat(b64, question, tf){
   clearChatImage();
 }
 
-function addMsg(role,text){return addMsgToChat('chat-msgs',role,text);}
+function addMsg(role,text){return addMsgToChat('sr-chat-msgs',role,text);}
 
 function addMsgToChat(chatId,role,text){
+  // Fallback: si chatId non trouvé, utilise sr-chat-msgs
+  const resolvedId=document.getElementById(chatId)?chatId:(document.getElementById('sr-chat-msgs')?'sr-chat-msgs':'chat-msgs');
+  chatId=resolvedId;
   const wrapper=document.createElement('div');
   const el=document.createElement('div');
   el.className='msg '+role;el.textContent=text;
@@ -2217,10 +2220,32 @@ function exportMsgTxt(text){
 }
 
 async function sendMsg(){
-  const inp=document.getElementById('sr-ai-inp')||document.getElementById('ai-inp');const msg=inp.value.trim();if(!msg)return;
-  inp.value='';addMsgToChat('chat-msgs','user',msg);
-  const t=addMsgToChat('chat-msgs','ai','...');
-  try{const txt=await callNexus(msg,700);t.textContent=txt;}
+  const inp=document.getElementById('sr-ai-inp')||document.getElementById('ai-inp');
+  const msg=inp.value.trim();
+  const tf=document.getElementById('chat-img-tf')?.value||'M5';
+  // Image en attente → Vision IA
+  if(chatImgB64){
+    if(msg)addMsgToChat('sr-chat-msgs','user',msg);
+    const thumb=document.getElementById('chat-img-thumb');
+    if(thumb&&thumb.src){
+      const imgMsg=document.createElement('div');
+      imgMsg.className='msg user';
+      const im=document.createElement('img');
+      im.className='msg-img';im.src=thumb.src;
+      imgMsg.appendChild(im);
+      if(!msg){const t2=document.createTextNode('📸 Analyse pré-trade '+tf);imgMsg.appendChild(t2);}
+      const msgs=document.getElementById('sr-chat-msgs');
+      if(msgs){msgs.appendChild(imgMsg);msgs.scrollTop=99999;}
+    }
+    inp.value='';
+    await analyzeImageInChat(chatImgB64,msg,tf);
+    return;
+  }
+  if(!msg)return;
+  inp.value='';
+  addMsgToChat('sr-chat-msgs','user',msg);
+  const t=addMsgToChat('sr-chat-msgs','ai','⬡ Analyse...');
+  try{const txt=await callNexus(msg,700);t.textContent=txt;addMsgActions(t);}
   catch(e){t.textContent=e.message==='no-key'?'Clé API requise dans Config.':'Erreur: '+e.message;}
 }
 
@@ -2236,10 +2261,13 @@ async function sendMsgTo(page){
 }
 
 async function ask(q){
-  addMsgToChat('chat-msgs','user',q);const t=addMsgToChat('chat-msgs','ai','...');
-  try{const txt=await callNexus(q,700);t.textContent=txt;}
-  catch(e){t.textContent=e.message==='no-key'?'Clé API requise.':'Erreur.';}
+  addMsgToChat('sr-chat-msgs','user',q);
+  const t=addMsgToChat('sr-chat-msgs','ai','⬡ Analyse...');
+  try{const txt=await callNexus(q,700);t.textContent=txt;addMsgActions(t);}
+  catch(e){t.textContent=e.message==='no-key'?'Clé API requise dans Config.':'Erreur.';}
 }
+
+function refreshRadar(){renderSignal();renderCombos();}
 
 async function runScan(){
   if(!apiKey){addMsg('sys','Clé API requise dans Config.');return;}
@@ -2330,6 +2358,20 @@ function importJSON(){
   };r.readAsText(file);
 }
 function clearAll(){trades=[];rebuildMem();visionLog=[];saveAll();renderAll();updateFilters();}
+
+async function generateReport(){
+  if(!apiKey){addMsg('sys','Clé API requise.');return;}
+  if(!tgToken||!tgChat){alert('Configure Telegram dans Config.');return;}
+  const t=addMsg('sys','Génération rapport Telegram...');
+  try{
+    const s=calcStats(trades);
+    const txt=await callNexus('Génère un rapport trading complet pour Telegram avec émojis: 1) Stats globales 2) Meilleur setup 3) Meilleure KZ 4) Profil psycho 5) 3 règles à appliquer.',700);
+    const rapport=`⬡ NEXUS v7 · RAPPORT\n${new Date().toLocaleDateString('fr-FR')}\n══════════════\n📊 ${s.totalTrades}t · WR ${s.wr.toFixed(0)}% · P&L ${s.totalPnl>=0?'+':''}${s.totalPnl.toFixed(0)}$\n══════════════\n${txt}`;
+    const r=await fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:tgChat,text:rapport})});
+    const d=await r.json();
+    t.textContent=d.ok?'✓ Rapport envoyé sur Telegram !':`Erreur Telegram: ${d.description}`;
+  }catch(e){t.textContent='Erreur: '+e.message;}
+}
 
 init();
 </script>
