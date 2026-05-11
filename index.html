@@ -1032,6 +1032,14 @@ function loadAll(){
   if(apiKey){
     document.getElementById('ai-status').textContent='claude-haiku · actif';
     document.getElementById('cfg-key').value=apiKey;
+    // Clé déjà mémorisée → fermer l'overlay automatiquement
+    document.getElementById('overlay').style.display='none';
+  }
+  if(tgToken){
+    const tt=document.getElementById('cfg-tg-token');
+    const tc=document.getElementById('cfg-tg-chat');
+    if(tt)tt.value=tgToken;
+    if(tc)tc.value=tgChat;
   }
   if(tgToken){document.getElementById('cfg-tg-token').value=tgToken;document.getElementById('cfg-tg-chat').value=tgChat;}
   if(!trades.length)loadDemo();
@@ -2127,7 +2135,7 @@ async function testTg(){
 // ══════════════════════════════════════════════════
 function saveKey(){
   const k=document.getElementById('key-inp').value.trim();
-  if(k&&!k.startsWith('sk-ant')){alert('Clé invalide — doit commencer par sk-ant');return;}
+  if(k&&!k.startsWith('sk-ant')&&!k.startsWith('sk-')){alert('Clé invalide');return;}
   if(k){apiKey=k;localStorage.setItem(AK,k);}
   const on=document.getElementById('tg-on').checked;
   if(on){
@@ -2142,7 +2150,10 @@ function saveKey(){
     setTimeout(deepLearn,1200);
   }
 }
-function skipKey(){document.getElementById('overlay').style.display='none';}
+function skipKey(){
+  document.getElementById('overlay').style.display='none';
+  addMsg('sys','NEXUS démarré sans IA — entre ta clé dans Config pour activer l\'intelligence.');
+}
 function updateKey(){
   const k=document.getElementById('cfg-key').value.trim();
   if(!k.startsWith('sk-ant')){alert('Clé invalide');return;}
@@ -3356,6 +3367,14 @@ function loadAll(){
   if(apiKey){
     document.getElementById('ai-status').textContent='claude-haiku · actif';
     document.getElementById('cfg-key').value=apiKey;
+    // Clé déjà mémorisée → fermer l'overlay automatiquement
+    document.getElementById('overlay').style.display='none';
+  }
+  if(tgToken){
+    const tt=document.getElementById('cfg-tg-token');
+    const tc=document.getElementById('cfg-tg-chat');
+    if(tt)tt.value=tgToken;
+    if(tc)tc.value=tgChat;
   }
   if(tgToken){document.getElementById('cfg-tg-token').value=tgToken;document.getElementById('cfg-tg-chat').value=tgChat;}
   if(!trades.length)loadDemo();
@@ -4451,7 +4470,7 @@ async function testTg(){
 // ══════════════════════════════════════════════════
 function saveKey(){
   const k=document.getElementById('key-inp').value.trim();
-  if(k&&!k.startsWith('sk-ant')){alert('Clé invalide — doit commencer par sk-ant');return;}
+  if(k&&!k.startsWith('sk-ant')&&!k.startsWith('sk-')){alert('Clé invalide');return;}
   if(k){apiKey=k;localStorage.setItem(AK,k);}
   const on=document.getElementById('tg-on').checked;
   if(on){
@@ -4466,7 +4485,10 @@ function saveKey(){
     setTimeout(deepLearn,1200);
   }
 }
-function skipKey(){document.getElementById('overlay').style.display='none';}
+function skipKey(){
+  document.getElementById('overlay').style.display='none';
+  addMsg('sys','NEXUS démarré sans IA — entre ta clé dans Config pour activer l\'intelligence.');
+}
 function updateKey(){
   const k=document.getElementById('cfg-key').value.trim();
   if(!k.startsWith('sk-ant')){alert('Clé invalide');return;}
