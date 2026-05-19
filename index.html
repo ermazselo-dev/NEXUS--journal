@@ -1394,7 +1394,12 @@ async function visAnalyze(){
     if(drop){ drop.style.borderColor='var(--R)'; setTimeout(function(){ drop.style.borderColor='var(--bd2)'; },1500); }
     return;
   }
-  if(!apiKey){ addMsg('sys','Cle API requise — configure dans Config.'); return; }
+  var useProxy = NEXUS_PROXY_URL && NEXUS_PROXY_URL.length > 0;
+  if(!useProxy && !apiKey){ addMsg('sys','Cle API requise — configure dans Config.'); return; }
+  var visEndpoint = useProxy ? NEXUS_PROXY_URL : 'https://api.anthropic.com/v1/messages';
+  var visHdrs = {'Content-Type':'application/json','anthropic-version':'2023-06-01'};
+  if(!useProxy){ visHdrs['x-api-key']=apiKey; visHdrs['anthropic-dangerous-direct-browser-access']='true'; }
+  else if(NEXUS_TOKEN){ visHdrs['X-Nexus-Token']=NEXUS_TOKEN; }
 
   var result = document.getElementById('vis-result');
   var tf = document.getElementById('vis-tf')?.value || 'M5';
@@ -2026,15 +2031,20 @@ function processVFile(file){
 
 async function analyzeVision(){
   if(!vImgB64){addMsgToChat('chat-msgs-vision','ai','Glisse d\'abord une capture de graphique.');return;}
-  if(!apiKey){addMsgToChat('chat-msgs-vision','ai','Clé API requise.');return;}
+  var useProxyV = NEXUS_PROXY_URL && NEXUS_PROXY_URL.length > 0;
+  if(!useProxyV && !apiKey){addMsgToChat('chat-msgs-vision','ai','Clé API requise.');return;}
+  var avEndpoint = useProxyV ? NEXUS_PROXY_URL : 'https://api.anthropic.com/v1/messages';
+  var avHdrs = {'Content-Type':'application/json','anthropic-version':'2023-06-01'};
+  if(!useProxyV){ avHdrs['x-api-key']=apiKey; avHdrs['anthropic-dangerous-direct-browser-access']='true'; }
+  else if(NEXUS_TOKEN){ avHdrs['X-Nexus-Token']=NEXUS_TOKEN; }
   const tf=document.getElementById('vtf').value;
   const moment=document.getElementById('vmoment').value;
   const el=document.getElementById('vresult');
   el.classList.add('show');el.innerHTML='<span style="color:var(--P)">⬡ Analyse Vision IA en cours...</span>';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res=await fetch(avEndpoint,{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:avHdrs,
       body:JSON.stringify({
         model:'claude-opus-4-6',max_tokens:700,
         system:`Tu es NEXUS Vision AI, expert ICT/SMC. Analyse le graphique et identifie: structure (BOS/CHoCH/MSS), liquidité (sweeps Asia H/L, EQH/EQL), zones (FVG/BPR/IFVG/OB), bias, Kill Zone active. Évalue GRADE A/B/C. Contexte trader: ${buildCtx()}`,
